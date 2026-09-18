@@ -29,15 +29,15 @@ const PROJECTS = [
   },
   {
     num: "03",
-    title: "Soulmate Shoes",
+    title: "Ecommerce Store",
     category: "Frontend / E-commerce",
     description:
-      "Responsive footwear e-commerce website with modern UI, product showcase and user-friendly shopping experience.",
-    tech: ["HTML", "CSS", "JavaScript"],
+      "Modern e-commerce store built with React and Vite. Features product listings, cart functionality and a clean responsive shopping experience.",
+    tech: ["React.js", "Vite", "JavaScript"],
     color: "#E91E8C",
     bg: "linear-gradient(135deg, #1a0010 0%, #2e0020 50%, #1a0010 100%)",
     live: null,
-    github: "https://github.com/fiza-fehmi/soulmate-shoes",
+    github: "https://github.com/fiza-fehmi/Ecommerce-Store",
   },
   {
     num: "04",
