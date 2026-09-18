@@ -77,18 +77,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Fiza Fehmi — Junior MERN Stack Developer" },
+      { title: "Fiza Fehmi — Full-Stack Developer" },
       {
         name: "description",
         content:
-          "Portfolio of Fiza Fehmi, a Junior MERN Stack Developer building responsive, secure full-stack web applications with React, Node.js, Express and MongoDB.",
+          "Full-stack developer building modern, responsive web applications with React, Node.js, Express and MongoDB.",
       },
       { name: "author", content: "Fiza Fehmi" },
-      { property: "og:title", content: "Fiza Fehmi — Junior MERN Stack Developer" },
+      { property: "og:title", content: "Fiza Fehmi — Full-Stack Developer" },
       {
         property: "og:description",
-        content:
-          "Portfolio of Fiza Fehmi, a Junior MERN Stack Developer building responsive, secure full-stack web applications.",
+        content: "Full-stack developer building modern, responsive web applications with React, Node.js, Express and MongoDB.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -99,7 +98,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
       },
       {
         rel: "stylesheet",

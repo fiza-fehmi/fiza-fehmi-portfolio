@@ -1,263 +1,195 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-/* ── word list — accent = violet highlight ───────────────────── */
-const WORDS = [
-  { text: "I build",      accent: false },
-  { text: "digital",      accent: true  },
-  { text: "experiences.", accent: false },
+const LINES = [
+  { text: "I BUILD",        accent: false },
+  { text: "DIGITAL",        accent: false },
+  { text: "EXPERIENCES.",   accent: true  },
 ];
 
-/* ── tiny animated grid background ──────────────────────────── */
-function GridBg() {
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 overflow-hidden"
-      aria-hidden="true"
-      style={{ opacity: 0.025 }}
-    >
-      <svg
-        className="absolute inset-0 h-full w-full"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <pattern
-            id="hero-grid"
-            width="60"
-            height="60"
-            patternUnits="userSpaceOnUse"
-          >
-            <path
-              d="M 60 0 L 0 0 0 60"
-              fill="none"
-              stroke="white"
-              strokeWidth="0.6"
-            />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#hero-grid)" />
-      </svg>
-    </div>
-  );
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
-/* ── floating violet orbs ────────────────────────────────────── */
-function Orbs() {
-  return (
-    <>
-      {/* Large primary orb — upper right */}
-      <div
-        className="hero-orb absolute"
-        style={{
-          right: "-5%",
-          top: "5%",
-          width: 700,
-          height: 700,
-          background: "radial-gradient(circle, #A259FF 0%, transparent 70%)",
-          animation: "pulseGlow 6s ease-in-out infinite",
-          opacity: 0.1,
-        }}
-      />
-      {/* Secondary orb — lower left */}
-      <div
-        className="hero-orb absolute"
-        style={{
-          left: "-8%",
-          bottom: "10%",
-          width: 400,
-          height: 400,
-          background: "radial-gradient(circle, #6C3FC5 0%, transparent 70%)",
-          animation: "pulseGlow 8s ease-in-out infinite",
-          animationDelay: "3s",
-          opacity: 0.07,
-        }}
-      />
-      {/* Tiny accent dot — centre right */}
-      <div
-        className="hero-orb absolute"
-        style={{
-          right: "25%",
-          top: "55%",
-          width: 200,
-          height: 200,
-          background: "radial-gradient(circle, #BF80FF 0%, transparent 70%)",
-          animation: "pulseGlow 5s ease-in-out infinite",
-          animationDelay: "1.5s",
-          opacity: 0.06,
-        }}
-      />
-    </>
-  );
-}
-
-/* ── floating tag badges ─────────────────────────────────────── */
-const BADGES = ["React", "Node.js", "MongoDB", "Express", "TypeScript"];
-
-function FloatingBadges({ visible }: { visible: boolean }) {
-  return (
-    <div className="absolute right-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-3">
-      {BADGES.map((b, i) => (
-        <div
-          key={b}
-          className="rounded-full border border-white/8 bg-white/3 px-4 py-1.5 font-mono text-xs text-white/30 backdrop-blur-sm transition-all duration-700"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateX(0)" : "translateX(20px)",
-            transitionDelay: `${900 + i * 80}ms`,
-            animation: visible
-              ? `floatY ${4 + i * 0.4}s ease-in-out infinite`
-              : "none",
-            animationDelay: `${i * 0.5}s`,
-          }}
-        >
-          {b}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ── main component ──────────────────────────────────────────── */
 export function Hero() {
-  const [visible, setVisible] = useState(false);
-  const [linesDone, setLinesDone] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [step, setStep] = useState(0);
+  // step 0 = nothing, 1 = badge, 2 = headline, 3 = sub + btns, 4 = scroll hint
 
-  /* trigger entrance */
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 80);
-    const t2 = setTimeout(() => setLinesDone(true), 1200);
-    return () => { clearTimeout(t); clearTimeout(t2); };
-  }, []);
-
-  /* subtle particle canvas */
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let raf: number;
-    const W = canvas.width  = canvas.offsetWidth;
-    const H = canvas.height = canvas.offsetHeight;
-
-    const particles = Array.from({ length: 55 }, () => ({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      r: Math.random() * 1.2 + 0.3,
-      dx: (Math.random() - 0.5) * 0.25,
-      dy: -(Math.random() * 0.3 + 0.1),
-      alpha: Math.random() * 0.25 + 0.05,
-    }));
-
-    function draw() {
-      if (!ctx) return;
-      ctx.clearRect(0, 0, W, H);
-      for (const p of particles) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(162,89,255,${p.alpha})`;
-        ctx.fill();
-        p.x += p.dx;
-        p.y += p.dy;
-        if (p.y < -4) { p.y = H + 4; p.x = Math.random() * W; }
-        if (p.x < 0)  p.x = W;
-        if (p.x > W)  p.x = 0;
-      }
-      raf = requestAnimationFrame(draw);
-    }
-    draw();
-    return () => cancelAnimationFrame(raf);
+    const timers = [
+      setTimeout(() => setStep(1), 200),
+      setTimeout(() => setStep(2), 500),
+      setTimeout(() => setStep(3), 1400),
+      setTimeout(() => setStep(4), 1900),
+    ];
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   return (
     <section
-      id="home"
-      className="relative flex min-h-screen flex-col items-start justify-center overflow-hidden px-6 md:px-12 lg:px-20"
+      id="hero"
+      className="relative flex min-h-screen flex-col justify-center overflow-hidden"
+      style={{ padding: "0 2rem" }}
       aria-label="Hero"
     >
-      <GridBg />
-      <Orbs />
-
-      {/* Particle canvas */}
-      <canvas
-        ref={canvasRef}
-        className="pointer-events-none absolute inset-0 h-full w-full"
+      {/* ── Subtle grid ── */}
+      <div
+        className="pointer-events-none absolute inset-0"
         aria-hidden="true"
+        style={{ opacity: 0.018 }}
+      >
+        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+              <path d="M 80 0 L 0 0 0 80" fill="none" stroke="white" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+      </div>
+
+      {/* ── Ambient glow ── */}
+      <div
+        className="pointer-events-none absolute"
+        aria-hidden="true"
+        style={{
+          right: "5%", top: "20%",
+          width: 600, height: 600,
+          background: "radial-gradient(circle, rgba(183,255,50,0.07) 0%, transparent 70%)",
+          filter: "blur(60px)",
+          animation: "pulseGlow 7s ease-in-out infinite",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute"
+        aria-hidden="true"
+        style={{
+          left: "-5%", bottom: "15%",
+          width: 400, height: 400,
+          background: "radial-gradient(circle, rgba(183,255,50,0.04) 0%, transparent 70%)",
+          filter: "blur(80px)",
+          animation: "pulseGlow 10s ease-in-out infinite 4s",
+        }}
       />
 
-      {/* Floating tech badges */}
-      <FloatingBadges visible={visible} />
+      {/* ── Content ── */}
+      <div className="container-xl relative z-10 max-w-6xl">
 
-      {/* ── Main content ── */}
-      <div className="relative z-10 max-w-5xl w-full">
-
-        {/* Top label — slides down */}
+        {/* Availability badge */}
         <div
-          className="mb-10 transition-all duration-700"
+          className="mb-10"
           style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(-12px)",
-            transitionDelay: "80ms",
+            opacity: step >= 1 ? 1 : 0,
+            transform: step >= 1 ? "translateY(0)" : "translateY(-10px)",
+            transition: "opacity 0.6s ease, transform 0.6s ease",
           }}
         >
-          <span className="label-accent">Full-Stack Web Developer · Pakistan</span>
+          <span className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5"
+            style={{ borderColor: "rgba(183,255,50,0.2)", background: "rgba(183,255,50,0.05)" }}>
+            <span
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ background: "var(--accent)", boxShadow: "0 0 6px 2px rgba(183,255,50,0.5)", animation: "pulseGlow 2s ease-in-out infinite" }}
+            />
+            <span className="eyebrow" style={{ letterSpacing: "0.14em" }}>Available for Freelance Projects</span>
+          </span>
         </div>
 
-        {/* ── Giant headline with clip-mask reveal ── */}
-        <h1
-          className="font-display font-black leading-[0.92] tracking-tight"
-          aria-label="I build digital experiences"
-        >
-          {WORDS.map((word, i) => (
-            <div
-              key={word.text}
-              className="overflow-hidden"
-            >
+        {/* Heading */}
+        <h1 className="font-display font-black leading-[0.88] tracking-tight" aria-label="I build digital experiences">
+          {LINES.map((line, i) => (
+            <div key={line.text} className="overflow-hidden">
               <span
-                className={`block text-[clamp(3rem,8vw,7rem)] ${
-                  word.accent ? "text-[#A259FF] v-glow-text" : "text-white"
-                }`}
+                className="block"
                 style={{
-                  display: "inline-block",
-                  animation: visible
-                    ? `slideReveal 0.75s cubic-bezier(0.16,1,0.3,1) forwards`
-                    : "none",
-                  animationDelay: `${180 + i * 140}ms`,
-                  opacity: visible ? undefined : 0,
+                  fontSize: "clamp(3.5rem, 10vw, 9.5rem)",
+                  color: line.accent ? "var(--accent)" : "var(--fg)",
+                  textShadow: line.accent ? "0 0 60px rgba(183,255,50,0.25)" : "none",
+                  display: "block",
+                  animation: step >= 2 ? `slideUp 0.75s cubic-bezier(0.16,1,0.3,1) forwards` : "none",
+                  animationDelay: `${i * 120}ms`,
+                  opacity: step >= 2 ? undefined : 0,
                 }}
               >
-                {word.text}
+                {line.text}
               </span>
             </div>
           ))}
         </h1>
 
-        {/* ── Sub-paragraph — fades in after headline ── */}
-        <p
-          className="mt-10 max-w-sm text-[15px] leading-relaxed text-white/35"
+        {/* Sub + CTAs */}
+        <div
+          className="mt-12 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between"
           style={{
-            animation: linesDone
-              ? "fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards"
-              : "none",
-            opacity: linesDone ? undefined : 0,
+            opacity: step >= 3 ? 1 : 0,
+            transform: step >= 3 ? "translateY(0)" : "translateY(20px)",
+            transition: "opacity 0.7s ease, transform 0.7s ease",
           }}
         >
-          Full-stack web developer focused on building modern, responsive
-          websites and web applications that are simple, useful and memorable.
-        </p>
+          <p
+            className="max-w-md text-base leading-relaxed"
+            style={{ color: "var(--fg2)", fontSize: "clamp(0.9rem, 1.5vw, 1.05rem)" }}
+          >
+            Full-Stack Developer building modern, scalable web applications
+            with React, Node.js, Express and MongoDB.
+          </p>
 
-        {/* ── Decorative violet line — draws in ── */}
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Primary CTA */}
+            <button
+              onClick={() => scrollTo("work")}
+              className="group flex items-center gap-2 rounded-full px-7 py-3.5 text-[12px] font-bold tracking-[0.12em] uppercase transition-all duration-300 hover:scale-105"
+              style={{ background: "var(--accent)", color: "#050505", boxShadow: "0 0 32px -8px rgba(183,255,50,0.5)" }}
+              onMouseEnter={e => (e.currentTarget as HTMLElement).style.boxShadow = "0 0 48px -6px rgba(183,255,50,0.65)"}
+              onMouseLeave={e => (e.currentTarget as HTMLElement).style.boxShadow = "0 0 32px -8px rgba(183,255,50,0.5)"}
+            >
+              View My Work
+              <span className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+            </button>
+
+            {/* Secondary CTA */}
+            <button
+              onClick={() => scrollTo("contact")}
+              className="group flex items-center gap-2 rounded-full border px-7 py-3.5 text-[12px] font-bold tracking-[0.12em] uppercase transition-all duration-300"
+              style={{ borderColor: "rgba(255,255,255,0.15)", color: "var(--fg2)" }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.35)";
+                (e.currentTarget as HTMLElement).style.color = "#fff";
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.15)";
+                (e.currentTarget as HTMLElement).style.color = "var(--fg2)";
+              }}
+            >
+              Let's Talk
+              <span className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Scroll hint */}
         <div
-          className="mt-12 h-px rounded-full"
+          className="absolute bottom-10 left-0 flex items-center gap-3"
           style={{
-            background:
-              "linear-gradient(90deg, #A259FF 0%, rgba(162,89,255,0.1) 60%, transparent 100%)",
-            width: linesDone ? "280px" : "0px",
-            transition: "width 1s cubic-bezier(0.16,1,0.3,1)",
-            transitionDelay: "200ms",
+            paddingLeft: "clamp(2rem, 5vw, 5rem)",
+            opacity: step >= 4 ? 1 : 0,
+            transition: "opacity 0.8s ease",
           }}
-          aria-hidden="true"
-        />
+        >
+          <span className="eyebrow text-[9px]" style={{ color: "var(--fg3)" }}>Scroll to explore</span>
+          <span style={{ color: "var(--fg3)", animation: "arrowBounce 1.8s ease-in-out infinite", display: "inline-block", fontSize: "0.75rem" }}>↓</span>
+        </div>
+      </div>
+
+      {/* ── Bottom info strip ── */}
+      <div
+        className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-6 py-4 md:px-12 lg:px-20"
+        style={{ borderTop: "1px solid rgba(255,255,255,0.04)", opacity: step >= 4 ? 1 : 0, transition: "opacity 1s ease 0.4s" }}
+      >
+        <span className="eyebrow text-[9px]" style={{ color: "var(--fg3)", letterSpacing: "0.14em" }}>
+          Fiza Fehmi — Portfolio 2026
+        </span>
+        <span className="eyebrow text-[9px]" style={{ color: "var(--fg3)", letterSpacing: "0.14em" }}>
+          Bahawalpur, Pakistan
+        </span>
       </div>
     </section>
   );

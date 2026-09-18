@@ -7,17 +7,15 @@ export function useInView(options?: IntersectionObserverInit) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true);
-          observer.unobserve(el); // only trigger once
+          observer.unobserve(el);
         }
       },
-      { threshold: 0.15, ...options }
+      { threshold: 0.12, ...options }
     );
-
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
