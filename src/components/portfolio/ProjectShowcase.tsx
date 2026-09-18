@@ -36,7 +36,7 @@ const PROJECTS = [
     tech: ["React.js", "Vite", "JavaScript"],
     color: "#E91E8C",
     bg: "linear-gradient(135deg, #1a0010 0%, #2e0020 50%, #1a0010 100%)",
-    live: null,
+    live: "https://ecommerce-store-1hqv.vercel.app",
     github: "https://github.com/fiza-fehmi/Ecommerce-Store",
   },
   {
