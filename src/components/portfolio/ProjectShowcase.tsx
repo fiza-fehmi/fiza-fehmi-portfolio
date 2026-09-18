@@ -48,7 +48,7 @@ const PROJECTS = [
     tech: ["HTML", "CSS", "JavaScript"],
     color: "#2196F3",
     bg: "linear-gradient(135deg, #000d1a 0%, #001830 50%, #000d1a 100%)",
-    live: null,
+    live: "https://fiza-fehmi.github.io/Property_Hub/",
     github: "https://github.com/fiza-fehmi/Property_Hub",
   },
   {
@@ -72,7 +72,7 @@ const PROJECTS = [
     tech: ["HTML", "CSS"],
     color: "#8B5E3C",
     bg: "linear-gradient(135deg, #120a04 0%, #241408 50%, #120a04 100%)",
-    live: null,
+    live: "https://fiza-fehmi.github.io/coffees-website/",
     github: "https://github.com/fiza-fehmi/coffees-website",
   },
 ];
