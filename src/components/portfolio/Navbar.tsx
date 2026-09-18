@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Github, Linkedin, Mail } from "lucide-react";
 
 const NAV_LINKS = [
   { id: "about",      label: "About"      },
   { id: "projects",   label: "Projects"   },
   { id: "experience", label: "Experience" },
-  { id: "contact",    label: "Let's Talk" },
+  { id: "contact",    label: "Contact"    },
+];
+
+const SOCIALS = [
+  { href: "mailto:fzafehmi@gmail.com",        icon: Mail,     label: "Email"    },
+  { href: "https://github.com/fiza-fehmi",    icon: Github,   label: "GitHub"   },
+  { href: "https://linkedin.com",             icon: Linkedin, label: "LinkedIn" },
 ];
 
 function useScrolled(threshold = 30) {
@@ -67,26 +73,10 @@ export function Navbar() {
           FIZA<span className="text-[#A259FF]">.</span>
         </button>
 
-        {/* Desktop links */}
+        {/* Desktop nav links */}
         <ul className="hidden items-center gap-10 md:flex">
           {NAV_LINKS.map((link) => {
-            const isContact = link.id === "contact";
-            const isActive  = active === link.id;
-
-            if (isContact) {
-              return (
-                <li key={link.id}>
-                  <button
-                    onClick={() => scrollTo(link.id)}
-                    className="rounded-full border border-white/15 px-5 py-2 text-xs font-semibold tracking-widest uppercase text-white/60 transition-all duration-300 hover:border-[#A259FF]/50 hover:text-[#A259FF]"
-                    style={isActive ? { borderColor: "rgba(162,89,255,0.5)", color: "#A259FF" } : {}}
-                  >
-                    {link.label}
-                  </button>
-                </li>
-              );
-            }
-
+            const isActive = active === link.id;
             return (
               <li key={link.id}>
                 <button
@@ -101,7 +91,6 @@ export function Navbar() {
                   }}
                 >
                   {link.label}
-                  {/* Active underline dot */}
                   {isActive && (
                     <span
                       className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-[#A259FF]"
@@ -113,6 +102,55 @@ export function Navbar() {
             );
           })}
         </ul>
+
+        {/* Right — socials + CTA */}
+        <div className="hidden items-center gap-2 md:flex">
+          {/* Social icons */}
+          {SOCIALS.map(({ href, icon: Icon, label }) => (
+            <a
+              key={label}
+              href={href}
+              target={href.startsWith("http") ? "_blank" : undefined}
+              rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+              aria-label={label}
+              className="flex h-8 w-8 items-center justify-center rounded-full border transition-all duration-200"
+              style={{ borderColor: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.3)" }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(162,89,255,0.4)";
+                (e.currentTarget as HTMLElement).style.color = "#A259FF";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)";
+                (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.3)";
+              }}
+            >
+              <Icon className="h-3.5 w-3.5" />
+            </a>
+          ))}
+
+          {/* Thin divider */}
+          <div className="mx-2 h-4 w-px" style={{ background: "rgba(255,255,255,0.08)" }} />
+
+          {/* Let's Talk CTA */}
+          <button
+            onClick={() => scrollTo("contact")}
+            className="group flex items-center gap-1.5 rounded-full border px-5 py-2 text-[11px] font-semibold tracking-[0.14em] uppercase transition-all duration-300"
+            style={{ borderColor: "rgba(162,89,255,0.35)", color: "#A259FF" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.background = "#A259FF";
+              (e.currentTarget as HTMLElement).style.color = "#050505";
+              (e.currentTarget as HTMLElement).style.borderColor = "#A259FF";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.background = "transparent";
+              (e.currentTarget as HTMLElement).style.color = "#A259FF";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(162,89,255,0.35)";
+            }}
+          >
+            Let's Talk
+            <span className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+          </button>
+        </div>
 
         {/* Mobile toggle */}
         <button
@@ -127,7 +165,7 @@ export function Navbar() {
       {/* Mobile drawer */}
       <div
         className={`overflow-hidden border-b border-white/5 bg-[#050505]/95 backdrop-blur-xl transition-all duration-300 md:hidden ${
-          open ? "max-h-72" : "max-h-0"
+          open ? "max-h-80" : "max-h-0"
         }`}
       >
         <ul className="flex flex-col gap-1 px-6 py-5">
@@ -143,6 +181,22 @@ export function Navbar() {
             </li>
           ))}
         </ul>
+        {/* Mobile socials */}
+        <div className="flex items-center gap-3 px-6 pb-5">
+          {SOCIALS.map(({ href, icon: Icon, label }) => (
+            <a
+              key={label}
+              href={href}
+              target={href.startsWith("http") ? "_blank" : undefined}
+              rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+              aria-label={label}
+              className="flex h-8 w-8 items-center justify-center rounded-full border"
+              style={{ borderColor: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.3)" }}
+            >
+              <Icon className="h-3.5 w-3.5" />
+            </a>
+          ))}
+        </div>
       </div>
     </header>
   );
