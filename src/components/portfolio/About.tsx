@@ -23,7 +23,7 @@ export function About() {
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          <span className="label-lime">01 — About Me</span>
+          <span className="label-accent">01 — About Me</span>
         </div>
 
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-start">
@@ -37,7 +37,7 @@ export function About() {
               <span className="block text-[clamp(2.8rem,6vw,5.5rem)] text-white">I build</span>
               <span className="block text-[clamp(2.8rem,6vw,5.5rem)] text-white">websites</span>
               <span className="block text-[clamp(2.8rem,6vw,5.5rem)] text-white">that feel</span>
-              <span className="block text-[clamp(2.8rem,6vw,5.5rem)] text-[#B8FF2C] lime-glow-text">
+              <span className="block text-[clamp(2.8rem,6vw,5.5rem)] text-[#A259FF] v-glow-text">
                 alive.
               </span>
             </h2>
@@ -89,7 +89,7 @@ export function About() {
                   <p className="label mt-1 text-white/30">Year experience</p>
                 </div>
                 <div>
-                  <p className="font-display text-4xl font-black text-[#B8FF2C]">∞</p>
+                  <p className="font-display text-4xl font-black text-[#A259FF]">∞</p>
                   <p className="label mt-1 text-white/30">Coffee cups</p>
                 </div>
               </div>

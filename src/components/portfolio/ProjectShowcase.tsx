@@ -43,7 +43,7 @@ const PROJECTS = [
     description:
       "Task management application with add, edit, complete and clear-all functionality. Clean minimal UI built with vanilla JavaScript.",
     tech: ["HTML", "JavaScript", "Tailwind CSS"],
-    color: "#B8FF2C",
+    color: "#A259FF",
     bg: "linear-gradient(135deg, #0a1300 0%, #141f00 50%, #0a1300 100%)",
     mockLines: ["lime"],
   },
@@ -195,7 +195,7 @@ export function ProjectShowcase() {
           }`}
         >
           <div>
-            <span className="label-lime">02 — Selected Work</span>
+            <span className="label-accent">02 — Selected Work</span>
             <h2 className="mt-4 font-display font-black leading-[0.9] tracking-tight">
               <span className="block text-[clamp(2.5rem,6vw,5rem)] text-white">Things I've</span>
               <span className="block text-[clamp(2.5rem,6vw,5rem)] text-white">built.</span>
@@ -248,13 +248,13 @@ export function ProjectShowcase() {
                 </div>
                 {/* Arrow CTA */}
                 <button
-                  className="group mt-8 flex h-12 w-12 items-center justify-center rounded-full border border-white/10 text-white/40 transition-all duration-300 hover:border-[#B8FF2C]/50 hover:text-[#B8FF2C] hover:scale-110"
+                  className="group mt-8 flex h-12 w-12 items-center justify-center rounded-full border border-white/10 text-white/40 transition-all duration-300 hover:border-[#A259FF]/50 hover:text-[#A259FF] hover:scale-110"
                   aria-label={`View ${project.title}`}
                   style={{
                     boxShadow: "none",
                   }}
                   onMouseEnter={(e) =>
-                    (e.currentTarget.style.boxShadow = "0 0 20px -4px rgba(184,255,44,0.3)")
+                    (e.currentTarget.style.boxShadow = "0 0 20px -4px rgba(162,89,255,0.3)")
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.boxShadow = "none")
@@ -287,7 +287,7 @@ export function ProjectShowcase() {
                   onClick={() => goTo(i)}
                   className={`h-1 rounded-full transition-all duration-400 ${
                     i === active
-                      ? "w-8 bg-[#B8FF2C]"
+                      ? "w-8 bg-[#A259FF]"
                       : "w-1 bg-white/15 hover:bg-white/30"
                   }`}
                 />

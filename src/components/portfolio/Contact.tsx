@@ -22,7 +22,7 @@ export function Contact() {
   };
 
   const inputCls =
-    "w-full rounded-xl border border-white/8 bg-white/3 px-4 py-3 text-sm text-white placeholder:text-white/20 outline-none transition-all duration-200 focus:border-[#B8FF2C]/40 focus:bg-white/5";
+    "w-full rounded-xl border border-white/8 bg-white/3 px-4 py-3 text-sm text-white placeholder:text-white/20 outline-none transition-all duration-200 focus:border-[#A259FF]/40 focus:bg-white/5";
 
   return (
     <section
@@ -34,7 +34,7 @@ export function Contact() {
       {/* Ambient orb */}
       <div
         className="hero-orb pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 opacity-[0.05]"
-        style={{ background: "#B8FF2C" }}
+        style={{ background: "#A259FF" }}
         aria-hidden="true"
       />
 
@@ -45,7 +45,7 @@ export function Contact() {
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          <span className="label-lime">04 — Contact</span>
+          <span className="label-accent">04 — Contact</span>
         </div>
 
         {/* Giant CTA headline */}
@@ -60,7 +60,7 @@ export function Contact() {
             </span>
             <span className="block text-[clamp(3rem,8vw,7rem)] text-white">
               something{" "}
-              <span className="text-[#B8FF2C] lime-glow-text">good.</span>
+              <span className="text-[#A259FF] v-glow-text">good.</span>
             </span>
           </h2>
           <p className="mt-6 max-w-md text-[15px] leading-relaxed text-white/35">
@@ -81,7 +81,7 @@ export function Contact() {
               href="mailto:fzafehmi@gmail.com"
               className="group flex items-start gap-4 text-white/40 transition-colors duration-300 hover:text-white"
             >
-              <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/8 group-hover:border-[#B8FF2C]/30 group-hover:text-[#B8FF2C] transition-all duration-300">
+              <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/8 group-hover:border-[#A259FF]/30 group-hover:text-[#A259FF] transition-all duration-300">
                 <Mail className="h-4 w-4" />
               </span>
               <div>
@@ -104,7 +104,7 @@ export function Contact() {
             <div className="pt-4">
               <a
                 href="mailto:fzafehmi@gmail.com"
-                className="inline-flex h-12 items-center gap-2.5 rounded-full bg-[#B8FF2C] px-7 text-sm font-bold text-black transition-all duration-300 hover:scale-105 lime-glow"
+                className="inline-flex h-12 items-center gap-2.5 rounded-full bg-[#A259FF] px-7 text-sm font-bold text-black transition-all duration-300 hover:scale-105 v-glow"
               >
                 Let's Talk
               </a>
@@ -160,7 +160,7 @@ export function Contact() {
             </div>
             <button
               type="submit"
-              className="group flex h-12 items-center gap-2.5 rounded-full border border-white/10 px-7 text-sm font-bold text-white transition-all duration-300 hover:border-[#B8FF2C]/50 hover:text-[#B8FF2C]"
+              className="group flex h-12 items-center gap-2.5 rounded-full border border-white/10 px-7 text-sm font-bold text-white transition-all duration-300 hover:border-[#A259FF]/50 hover:text-[#A259FF]"
             >
               <Send className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
               {sent ? "Opening email client…" : "Send Message"}

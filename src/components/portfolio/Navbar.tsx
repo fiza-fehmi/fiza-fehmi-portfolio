@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
-  { id: "about",      label: "About" },
-  { id: "projects",   label: "Projects" },
+  { id: "about",      label: "About"      },
+  { id: "projects",   label: "Projects"   },
   { id: "experience", label: "Experience" },
   { id: "contact",    label: "Let's Talk" },
 ];
@@ -40,8 +40,7 @@ function useActiveSection() {
 }
 
 function scrollTo(id: string) {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: "smooth" });
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
 export function Navbar() {
@@ -57,42 +56,58 @@ export function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 md:px-12">
+      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 md:px-12">
+
         {/* Logo */}
         <button
           onClick={() => scrollTo("home")}
-          className="font-display text-lg font-bold tracking-widest text-white hover:text-[#B8FF2C] transition-colors duration-300"
+          className="font-display text-xl font-bold tracking-widest text-white transition-colors duration-300 hover:text-[#A259FF]"
           aria-label="Go to home"
         >
-          FIZA<span className="text-[#B8FF2C]">.</span>
+          FIZA<span className="text-[#A259FF]">.</span>
         </button>
 
         {/* Desktop links */}
         <ul className="hidden items-center gap-10 md:flex">
           {NAV_LINKS.map((link) => {
             const isContact = link.id === "contact";
-            const isActive = active === link.id;
+            const isActive  = active === link.id;
+
             if (isContact) {
               return (
                 <li key={link.id}>
                   <button
                     onClick={() => scrollTo(link.id)}
-                    className="label rounded-full border border-white/15 px-4 py-1.5 text-white/70 transition-all duration-300 hover:border-[#B8FF2C]/50 hover:text-[#B8FF2C]"
+                    className="rounded-full border border-white/15 px-5 py-2 text-xs font-semibold tracking-widest uppercase text-white/60 transition-all duration-300 hover:border-[#A259FF]/50 hover:text-[#A259FF]"
+                    style={isActive ? { borderColor: "rgba(162,89,255,0.5)", color: "#A259FF" } : {}}
                   >
                     {link.label}
                   </button>
                 </li>
               );
             }
+
             return (
               <li key={link.id}>
                 <button
                   onClick={() => scrollTo(link.id)}
-                  className={`label transition-colors duration-300 ${
-                    isActive ? "text-[#B8FF2C]" : "text-white/50 hover:text-white"
-                  }`}
+                  className="relative text-xs font-semibold tracking-widest uppercase transition-colors duration-300"
+                  style={{ color: isActive ? "#A259FF" : "rgba(255,255,255,0.45)" }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) (e.currentTarget as HTMLElement).style.color = "white";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.45)";
+                  }}
                 >
                   {link.label}
+                  {/* Active underline dot */}
+                  {isActive && (
+                    <span
+                      className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-[#A259FF]"
+                      aria-hidden="true"
+                    />
+                  )}
                 </button>
               </li>
             );
@@ -101,7 +116,7 @@ export function Navbar() {
 
         {/* Mobile toggle */}
         <button
-          className="flex h-9 w-9 items-center justify-center text-white/70 md:hidden"
+          className="flex h-9 w-9 items-center justify-center text-white/60 md:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -109,20 +124,19 @@ export function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile drawer */}
       <div
         className={`overflow-hidden border-b border-white/5 bg-[#050505]/95 backdrop-blur-xl transition-all duration-300 md:hidden ${
-          open ? "max-h-64" : "max-h-0"
+          open ? "max-h-72" : "max-h-0"
         }`}
       >
-        <ul className="flex flex-col gap-1 px-6 py-4">
+        <ul className="flex flex-col gap-1 px-6 py-5">
           {NAV_LINKS.map((link) => (
             <li key={link.id}>
               <button
                 onClick={() => { scrollTo(link.id); setOpen(false); }}
-                className={`label w-full py-2.5 text-left transition-colors duration-200 ${
-                  active === link.id ? "text-[#B8FF2C]" : "text-white/50"
-                }`}
+                className="w-full py-3 text-left text-xs font-semibold tracking-widest uppercase transition-colors duration-200"
+                style={{ color: active === link.id ? "#A259FF" : "rgba(255,255,255,0.4)" }}
               >
                 {link.label}
               </button>

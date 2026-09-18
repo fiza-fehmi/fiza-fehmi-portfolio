@@ -65,14 +65,14 @@ export function CustomCursor() {
       {/* Dot */}
       <div
         ref={dotRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9999] h-2 w-2 rounded-full bg-[#B8FF2C] hidden md:block"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] h-2 w-2 rounded-full bg-[#A259FF] hidden md:block"
         aria-hidden="true"
         style={{ willChange: "transform" }}
       />
       {/* Ring */}
       <div
         ref={ringRef}
-        className="cursor-ring pointer-events-none fixed left-0 top-0 z-[9998] h-8 w-8 rounded-full border border-[#B8FF2C]/30 hidden md:block transition-[width,height,border-color] duration-200"
+        className="cursor-ring pointer-events-none fixed left-0 top-0 z-[9998] h-8 w-8 rounded-full border border-[#A259FF]/30 hidden md:block transition-[width,height,border-color] duration-200"
         aria-hidden="true"
         style={{ willChange: "transform" }}
       />
@@ -80,7 +80,7 @@ export function CustomCursor() {
         .cursor-hover.cursor-ring {
           width: 48px;
           height: 48px;
-          border-color: rgba(184,255,44,0.5);
+          border-color: rgba(162,89,255,0.5);
         }
         @media (hover: none) {
           .cursor-ring, [data-dot] { display: none !important; }

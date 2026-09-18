@@ -19,7 +19,7 @@ export function Footer() {
           {/* Logo + tagline */}
           <div>
             <p className="font-display text-lg font-black tracking-widest text-white">
-              FIZA<span className="text-[#B8FF2C]">.</span>
+              FIZA<span className="text-[#A259FF]">.</span>
             </p>
             <p className="mt-2 text-xs text-white/25">
               Full-Stack Web Developer · Pakistan
@@ -47,7 +47,7 @@ export function Footer() {
             <a
               href="mailto:fzafehmi@gmail.com"
               aria-label="Email Fiza"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/8 text-white/30 transition-all duration-200 hover:border-[#B8FF2C]/40 hover:text-[#B8FF2C]"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/8 text-white/30 transition-all duration-200 hover:border-[#A259FF]/40 hover:text-[#A259FF]"
             >
               <Mail className="h-4 w-4" />
             </a>
@@ -56,7 +56,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub profile"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/8 text-white/30 transition-all duration-200 hover:border-[#B8FF2C]/40 hover:text-[#B8FF2C]"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/8 text-white/30 transition-all duration-200 hover:border-[#A259FF]/40 hover:text-[#A259FF]"
             >
               <Github className="h-4 w-4" />
             </a>
@@ -65,7 +65,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn profile"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/8 text-white/30 transition-all duration-200 hover:border-[#B8FF2C]/40 hover:text-[#B8FF2C]"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/8 text-white/30 transition-all duration-200 hover:border-[#A259FF]/40 hover:text-[#A259FF]"
             >
               <Linkedin className="h-4 w-4" />
             </a>

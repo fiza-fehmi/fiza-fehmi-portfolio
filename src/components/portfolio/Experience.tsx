@@ -44,7 +44,7 @@ export function Experience() {
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          <span className="label-lime">03 — Experience</span>
+          <span className="label-accent">03 — Experience</span>
           <h2 className="mt-4 font-display font-black leading-[0.9] tracking-tight">
             <span className="block text-[clamp(2.5rem,6vw,5rem)] text-white">Where I've</span>
             <span className="block text-[clamp(2.5rem,6vw,5rem)] text-white">been.</span>
@@ -60,7 +60,7 @@ export function Experience() {
             }`}
             style={{
               background:
-                "linear-gradient(to bottom, #B8FF2C, rgba(184,255,44,0.1))",
+                "linear-gradient(to bottom, #A259FF, rgba(162,89,255,0.1))",
               transitionDelay: "300ms",
             }}
             aria-hidden="true"
@@ -77,8 +77,8 @@ export function Experience() {
               >
                 {/* Lime node on the line */}
                 <div
-                  className="absolute left-[-4px] top-[42px] h-2 w-2 rounded-full bg-[#B8FF2C] transition-all duration-300 group-hover:scale-150"
-                  style={{ boxShadow: "0 0 10px 2px rgba(184,255,44,0.5)" }}
+                  className="absolute left-[-4px] top-[42px] h-2 w-2 rounded-full bg-[#A259FF] transition-all duration-300 group-hover:scale-150"
+                  style={{ boxShadow: "0 0 10px 2px rgba(162,89,255,0.5)" }}
                   aria-hidden="true"
                 />
 
@@ -86,7 +86,7 @@ export function Experience() {
                 <div className="grid gap-4 md:grid-cols-[180px_1fr] md:gap-12">
                   {/* Left meta */}
                   <div>
-                    <p className="label-lime">{item.num}</p>
+                    <p className="label-accent">{item.num}</p>
                     <p className="label mt-1 text-white/25">{item.period}</p>
                   </div>
                   {/* Right content */}
