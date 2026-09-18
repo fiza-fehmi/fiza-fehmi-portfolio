@@ -5,53 +5,75 @@ import { useInView } from "../../hooks/useInView";
 const PROJECTS = [
   {
     num: "01",
-    title: "Spotify Clone",
-    category: "Backend / API",
+    title: "Decoristic",
+    category: "Frontend / Furniture",
     description:
-      "RESTful backend with JWT authentication, role-based authorization, bcrypt security, and Music & Album APIs built with MongoDB and Mongoose.",
-    tech: ["Node.js", "Express.js", "MongoDB", "JWT", "bcrypt"],
-    color: "#1DB954",
-    bg: "linear-gradient(135deg, #0a1a0a 0%, #0d2e13 50%, #0a1a0a 100%)",
+      "Modern, responsive furniture and home décor website showcasing stylish collections with a clean, user-friendly UI design.",
+    tech: ["HTML", "CSS", "Responsive Design"],
+    color: "#C8A97E",
+    bg: "linear-gradient(135deg, #1a1208 0%, #2e2010 50%, #1a1208 100%)",
+    live: "https://decoristic-website.vercel.app",
+    github: "https://github.com/fiza-fehmi/decoristic-website",
   },
   {
     num: "02",
-    title: "Postage",
-    category: "Full-Stack / Social",
+    title: "Feane Fast Food",
+    category: "Frontend / Restaurant",
     description:
-      "Full-stack social platform with login, posts, feed, JWT auth, authorization, REST APIs, and image uploads via Multer and ImageKit.",
-    tech: ["React.js", "Node.js", "Express.js", "MongoDB", "Multer", "ImageKit"],
-    color: "#5865F2",
-    bg: "linear-gradient(135deg, #0a0a1a 0%, #0d0e2e 50%, #0a0a1a 100%)",
+      "Responsive fast food restaurant website with menus, offers and online ordering features. Fresh design with bold flavors in every pixel.",
+    tech: ["HTML", "CSS", "JavaScript"],
+    color: "#FF6B35",
+    bg: "linear-gradient(135deg, #1a0a00 0%, #2e1200 50%, #1a0a00 100%)",
+    live: "https://feane-fast-food-website.vercel.app",
+    github: "https://github.com/fiza-fehmi/feane-fast-food-website",
   },
   {
     num: "03",
-    title: "ShopSphere",
+    title: "Soulmate Shoes",
     category: "Frontend / E-commerce",
     description:
-      "Responsive e-commerce website with product listings, categories, cart and checkout functionality built with React and Tailwind CSS.",
-    tech: ["React.js", "Tailwind CSS", "JavaScript"],
-    color: "#FF6B35",
-    bg: "linear-gradient(135deg, #1a0a00 0%, #2e1200 50%, #1a0a00 100%)",
+      "Responsive footwear e-commerce website with modern UI, product showcase and user-friendly shopping experience.",
+    tech: ["HTML", "CSS", "JavaScript"],
+    color: "#E91E8C",
+    bg: "linear-gradient(135deg, #1a0010 0%, #2e0020 50%, #1a0010 100%)",
+    live: null,
+    github: "https://github.com/fiza-fehmi/soulmate-shoes",
   },
   {
     num: "04",
-    title: "TaskFlow",
-    category: "Frontend / Productivity",
+    title: "Property Hub",
+    category: "Frontend / Real Estate",
     description:
-      "Task management application with add, edit, complete and clear-all functionality. Clean minimal UI built with vanilla JavaScript.",
-    tech: ["HTML", "JavaScript", "Tailwind CSS"],
-    color: "#A259FF",
-    bg: "linear-gradient(135deg, #100a1a 0%, #1c0d2e 50%, #100a1a 100%)",
+      "Responsive real estate website showcasing properties by categories — Apartments, Villas, Commercial Spaces and Plots.",
+    tech: ["HTML", "CSS", "JavaScript"],
+    color: "#2196F3",
+    bg: "linear-gradient(135deg, #000d1a 0%, #001830 50%, #000d1a 100%)",
+    live: null,
+    github: "https://github.com/fiza-fehmi/Property_Hub",
   },
   {
     num: "05",
-    title: "Stack Calculator",
-    category: "Frontend / Utility",
+    title: "Postage",
+    category: "Full-Stack / Social",
     description:
-      "Interactive calculator supporting basic arithmetic operations. Clean, minimal UI with smooth button interactions.",
-    tech: ["HTML", "JavaScript", "Tailwind CSS"],
-    color: "#F0A500",
-    bg: "linear-gradient(135deg, #1a1200 0%, #2e1f00 50%, #1a1200 100%)",
+      "Full-stack social platform with login, posts, feed, JWT authentication, authorization, REST APIs and image uploads.",
+    tech: ["React.js", "Node.js", "Express.js", "MongoDB", "JWT", "Multer"],
+    color: "#5865F2",
+    bg: "linear-gradient(135deg, #0a0a1a 0%, #0d0e2e 50%, #0a0a1a 100%)",
+    live: null,
+    github: "https://github.com/fiza-fehmi",
+  },
+  {
+    num: "06",
+    title: "Coffee Shop",
+    category: "Frontend / Lifestyle",
+    description:
+      "Modern, responsive coffee shop website with warm aesthetics, menu showcase and a clean browsing experience.",
+    tech: ["HTML", "CSS"],
+    color: "#8B5E3C",
+    bg: "linear-gradient(135deg, #120a04 0%, #241408 50%, #120a04 100%)",
+    live: null,
+    github: "https://github.com/fiza-fehmi/coffees-website",
   },
 ];
 
@@ -80,7 +102,7 @@ function MockBrowser({
         <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/60" />
         <div className="h-2.5 w-2.5 rounded-full bg-green-500/60" />
         <div className="mx-4 flex-1 rounded-full bg-white/5 px-3 py-1 text-center font-mono text-[10px] text-white/20">
-          {project.title.toLowerCase().replace(/\s/g, "-")}.dev
+          {project.live ? project.live.replace("https://", "") : `${project.title.toLowerCase().replace(/\s/g, "-")}.dev`}
         </div>
       </div>
 
@@ -394,25 +416,43 @@ export function ProjectShowcase() {
                 ))}
               </div>
 
-              {/* Arrow button */}
-              <button
-                className="group mt-8 flex h-12 w-12 items-center justify-center rounded-full border border-white/10 text-white/40
-                           transition-all duration-300 hover:scale-110"
-                style={{}}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(162,89,255,0.5)";
-                  e.currentTarget.style.color = "#A259FF";
-                  e.currentTarget.style.boxShadow = "0 0 24px -6px rgba(162,89,255,0.4)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-                  e.currentTarget.style.color = "rgba(255,255,255,0.4)";
-                  e.currentTarget.style.boxShadow = "none";
-                }}
-                aria-label={`View ${project.title}`}
-              >
-                <ArrowUpRight className="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </button>
+              {/* Action buttons */}
+              <div className="mt-8 flex items-center gap-3">
+                {project.live && (
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex h-11 items-center gap-2 rounded-full px-5 text-[11px] font-bold tracking-widest uppercase transition-all duration-300 hover:scale-105"
+                    style={{ background: project.color, color: "#050505" }}
+                    aria-label={`View ${project.title} live`}
+                  >
+                    Live Site
+                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
+                )}
+                {project.github && (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex h-11 items-center gap-2 rounded-full border px-5 text-[11px] font-bold tracking-widest uppercase transition-all duration-300"
+                    style={{ borderColor: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.4)" }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLElement).style.borderColor = `${project.color}50`;
+                      (e.currentTarget as HTMLElement).style.color = project.color;
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)";
+                      (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.4)";
+                    }}
+                    aria-label={`View ${project.title} on GitHub`}
+                  >
+                    GitHub
+                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
+                )}
+              </div>
             </div>
           </div>
 
