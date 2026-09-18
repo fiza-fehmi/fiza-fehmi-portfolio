@@ -1,17 +1,7 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "functions": {
-    "api/server.js": {
-      "runtime": "nodejs20.x",
-      "memory": 512,
-      "maxDuration": 10
-    }
-  },
+  "buildCommand": "npm run build:static",
+  "outputDirectory": "dist/static",
   "rewrites": [
-    { "source": "/assets/(.*)", "destination": "/client/assets/$1" },
-    { "source": "/favicon.svg", "destination": "/client/favicon.svg" },
-    { "source": "/robots.txt", "destination": "/client/robots.txt" },
-    { "source": "/(.*)", "destination": "/api/server.js" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
