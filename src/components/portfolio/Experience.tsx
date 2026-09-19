@@ -1,243 +1,127 @@
-import { useEffect, useRef, useState } from "react";
-import { useInView } from "../../hooks/useInView";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { experiences, skills } from "../../data/portfolio";
 
-const ITEMS = [
-  {
-    num: "01",
-    period: "2026 — Present",
-    title: "MERN Stack Developer Intern",
-    org: "AI TechSpine LLC · Remote",
-    description:
-      "Building and maintaining modern web applications using React, Node.js, Express and MongoDB. Implementing JWT authentication, authorization and clean REST APIs.",
-    skills: ["React", "Node.js", "Express", "MongoDB", "JWT"],
-  },
-  {
-    num: "02",
-    period: "2024 — 2026",
-    title: "Graphic Design & Brand Marketing",
-    org: "Freelance",
-    description:
-      "Designing visual identities, digital experiences and marketing materials for clients. Bridging design and development with a full-stack perspective.",
-    skills: ["Figma", "Brand Identity", "UI/UX", "Marketing"],
-  },
-  {
-    num: "03",
-    period: "2022 — Present",
-    title: "BS Computer Science",
-    org: "University · Pakistan",
-    description:
-      "Developing a strong foundation in software engineering, web development, data structures and computer science fundamentals.",
-    skills: ["Algorithms", "Data Structures", "OOP", "Web Dev"],
-  },
-];
-
-/* ── individual item with its own IntersectionObserver ──────── */
-function TimelineItem({
-  item,
-  index,
-  lineProgress,
-}: {
-  item: (typeof ITEMS)[number];
-  index: number;
-  lineProgress: number;
-}) {
-  const { ref, inView } = useInView({ threshold: 0.2 });
-  const [hovered, setHovered] = useState(false);
-
-  const nodeVisible = lineProgress > (index / ITEMS.length) * 100 - 5;
+const Experience = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <div
-      ref={ref as React.RefObject<HTMLDivElement>}
-      className="group relative pl-10 py-10 border-b border-white/5 last:border-0"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {/* Timeline node */}
-      <div
-        className="absolute left-[-5px] top-[44px] h-2.5 w-2.5 rounded-full transition-all duration-500"
-        style={{
-          background: "#A259FF",
-          opacity: nodeVisible ? 1 : 0,
-          transform: nodeVisible
-            ? hovered ? "scale(2)" : "scale(1)"
-            : "scale(0)",
-          boxShadow: hovered
-            ? "0 0 16px 4px rgba(162,89,255,0.6)"
-            : "0 0 8px 2px rgba(162,89,255,0.4)",
-        }}
-        aria-hidden="true"
-      />
+    <section id="experience" ref={ref} className="relative bg-[#0a0a0a] py-24 md:py-32 lg:py-40">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="mb-16 md:mb-24"
+        >
+          <div className="flex items-center space-x-4 mb-6">
+            <span className="text-xs text-[#c4ff00] font-medium tracking-wider uppercase">
+              03 — EXPERIENCE
+            </span>
+            <div className="flex-1 h-px bg-white/10"></div>
+          </div>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight">
+            Experience<span className="text-[#c4ff00]">.</span>
+          </h2>
+        </motion.div>
 
-      {/* Hover highlight */}
-      <div
-        className="absolute inset-0 rounded-xl transition-all duration-300 pointer-events-none"
-        style={{
-          background: hovered ? "rgba(162,89,255,0.03)" : "transparent",
-          borderLeft: hovered ? "2px solid rgba(162,89,255,0.2)" : "2px solid transparent",
-        }}
-        aria-hidden="true"
-      />
-
-      <div
-        className="grid gap-4 md:grid-cols-[180px_1fr] md:gap-12 transition-all duration-600"
-        style={{
-          opacity: inView ? 1 : 0,
-          transform: inView ? "translateX(0)" : "translateX(-24px)",
-          transitionDelay: `${index * 80}ms`,
-        }}
-      >
-        {/* Left meta */}
-        <div>
-          <p
-            className="label-accent transition-all duration-300"
-            style={{ letterSpacing: hovered ? "0.22em" : "0.15em" }}
-          >
-            {item.num}
-          </p>
-          <p className="label mt-1 text-white/25">{item.period}</p>
-        </div>
-
-        {/* Right content */}
-        <div>
-          <h3 className="font-display text-xl font-bold text-white md:text-2xl">
-            {item.title}
-          </h3>
-          <p className="label mt-1 text-white/30">{item.org}</p>
-          <p
-            className="mt-3 text-[14px] leading-relaxed transition-all duration-300"
-            style={{ color: hovered ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.3)" }}
-          >
-            {item.description}
-          </p>
-
-          {/* Skill pills — slide in on hover */}
-          <div
-            className="mt-4 flex flex-wrap gap-2 overflow-hidden transition-all duration-400"
-            style={{ maxHeight: hovered ? "60px" : "0px", opacity: hovered ? 1 : 0 }}
-          >
-            {item.skills.map((s, i) => (
-              <span
-                key={s}
-                className="rounded-full border border-[#A259FF]/25 bg-[#A259FF]/8 px-3 py-1 text-[11px] font-mono text-[#A259FF]/70"
-                style={{
-                  transition: "opacity 0.3s ease, transform 0.3s ease",
-                  transitionDelay: `${i * 40}ms`,
-                  opacity: hovered ? 1 : 0,
-                  transform: hovered ? "translateY(0)" : "translateY(6px)",
-                }}
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+          {/* Timeline */}
+          <div className="space-y-12">
+            {experiences.map((exp, index) => (
+              <motion.div
+                key={exp.id}
+                initial={{ opacity: 0, x: -30 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
+                className="relative pl-8 border-l-2 border-white/10 hover:border-[#c4ff00]/50 transition-colors duration-500 group"
               >
-                {s}
-              </span>
+                {/* Green Dot Indicator */}
+                <div className="absolute left-0 top-0 -translate-x-[9px] w-4 h-4 rounded-full bg-[#c4ff00] group-hover:scale-125 transition-transform duration-300"></div>
+
+                {/* Period */}
+                <div className="text-xs text-[#c4ff00] font-medium tracking-wider uppercase mb-3">
+                  {exp.period}
+                </div>
+
+                {/* Title */}
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2">
+                  {exp.title}
+                </h3>
+
+                {/* Company */}
+                <div className="text-sm text-white/60 mb-4">
+                  {exp.company} — {exp.location}
+                </div>
+
+                {/* Description */}
+                <p className="text-white/60 leading-relaxed">
+                  {exp.description}
+                </p>
+              </motion.div>
             ))}
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
-/* ── animated line draw ──────────────────────────────────────── */
-function useLineProgress(ref: React.RefObject<HTMLDivElement | null>) {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onScroll = () => {
-      const rect = el.getBoundingClientRect();
-      const visible = window.innerHeight - rect.top;
-      const pct = Math.max(0, Math.min(100, (visible / rect.height) * 120 - 10));
-      setProgress(pct);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return progress;
-}
-
-export function Experience() {
-  const { ref: sectionRef, inView } = useInView();
-  const timelineRef = useRef<HTMLDivElement>(null);
-  const lineProgress = useLineProgress(timelineRef);
-
-  return (
-    <section
-      id="experience"
-      ref={sectionRef as React.RefObject<HTMLElement>}
-      className="relative py-32 md:py-40 px-6 md:px-12 lg:px-20 divider overflow-hidden"
-      aria-label="Experience"
-    >
-      {/* BG orb */}
-      <div
-        className="pointer-events-none absolute -left-32 bottom-0 h-[400px] w-[400px] rounded-full opacity-[0.04]"
-        style={{ background: "#A259FF", filter: "blur(100px)", animation: "pulseGlow 9s ease-in-out infinite" }}
-        aria-hidden="true"
-      />
-
-      <div className="mx-auto max-w-7xl relative z-10">
-        {/* Header */}
-        <div
-          className="mb-16 transition-all duration-700"
-          style={{
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(20px)",
-          }}
-        >
-          <span className="label-accent">03 — Experience</span>
-          <h2 className="mt-4 font-display font-black leading-[0.9] tracking-tight">
-            {["Where I've", "been."].map((line, i) => (
-              <div key={line} className="overflow-hidden">
-                <span
-                  className="block text-[clamp(2.5rem,6vw,5rem)] text-white"
-                  style={{
-                    display: "inline-block",
-                    animation: inView
-                      ? `slideReveal 0.7s cubic-bezier(0.16,1,0.3,1) forwards`
-                      : "none",
-                    animationDelay: `${100 + i * 120}ms`,
-                    opacity: inView ? undefined : 0,
-                  }}
-                >
-                  {line}
+          {/* Skills / Services Section */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="space-y-8"
+          >
+            <div className="border border-white/10 p-8 md:p-10 space-y-8 bg-white/[0.02] backdrop-blur-sm">
+              <div>
+                <span className="text-xs text-white/50 font-medium tracking-wider uppercase">
+                  What I Can Build
                 </span>
               </div>
-            ))}
-          </h2>
-        </div>
 
-        {/* Timeline */}
-        <div className="relative" ref={timelineRef}>
-          {/* Animated vertical line */}
-          <div
-            className="absolute left-0 top-0 w-px rounded-full"
-            style={{
-              height: `${lineProgress}%`,
-              background: "linear-gradient(to bottom, #A259FF, rgba(162,89,255,0.15))",
-              transition: "height 0.1s linear",
-              boxShadow: "0 0 8px rgba(162,89,255,0.4)",
-            }}
-            aria-hidden="true"
-          />
-          {/* Ghost line */}
-          <div
-            className="absolute left-0 top-0 w-px h-full"
-            style={{ background: "rgba(255,255,255,0.04)" }}
-            aria-hidden="true"
-          />
+              <div className="space-y-4">
+                {skills.map((skill, index) => (
+                  <motion.div
+                    key={skill}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.4, delay: 0.5 + index * 0.05 }}
+                    className="group"
+                  >
+                    <div className="flex items-center space-x-3 py-3 border-b border-white/5 group-hover:border-[#c4ff00]/30 transition-colors duration-300">
+                      <div className="w-1.5 h-1.5 bg-[#c4ff00] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <span className="text-white/70 group-hover:text-white transition-colors duration-300">
+                        {skill}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
 
-          {ITEMS.map((item, i) => (
-            <TimelineItem
-              key={item.num}
-              item={item}
-              index={i}
-              lineProgress={lineProgress}
-            />
-          ))}
+            {/* Additional Info Box */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="border border-[#c4ff00]/30 p-6 bg-[#c4ff00]/5 backdrop-blur-sm"
+            >
+              <div className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-[#c4ff00] rounded-full mt-2 animate-pulse"></div>
+                <div className="space-y-2">
+                  <div className="text-sm font-semibold text-white">
+                    Available for Freelance
+                  </div>
+                  <div className="text-sm text-white/60">
+                    Open to new projects and collaborations. Let's build something amazing together.
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default Experience;

@@ -40,9 +40,9 @@
   --color-ring-offset-background: var(--background);
 }
 
-/* ── ACCENT: Electric Violet  #A259FF ─────────────────────────── */
+/* ── ACCENT: Neon Green  #c4ff00 ─────────────────────────── */
 :root {
-  --radius: 0.75rem;
+  --radius: 0rem;
 
   --background: oklch(0.06 0.005 265);
   --foreground: oklch(0.97 0.005 90);
@@ -53,9 +53,9 @@
   --popover: oklch(0.09 0.008 285);
   --popover-foreground: oklch(0.97 0.005 90);
 
-  /* Electric violet  #A259FF → oklch ~0.62 0.27 298 */
-  --primary: oklch(0.65 0.27 298);
-  --primary-foreground: oklch(0.98 0.005 298);
+  /* Neon Green #c4ff00 */
+  --primary: #c4ff00;
+  --primary-foreground: #0a0a0a;
 
   --secondary: oklch(0.13 0.01 285);
   --secondary-foreground: oklch(0.97 0.005 90);
@@ -64,18 +64,18 @@
   --muted-foreground: oklch(0.55 0.018 285);
 
   --accent: oklch(0.13 0.01 285);
-  --accent-foreground: oklch(0.65 0.27 298);
+  --accent-foreground: #c4ff00;
 
   --destructive: oklch(0.65 0.2 25);
   --destructive-foreground: oklch(0.98 0.005 247);
 
   --border: oklch(1 0 0 / 8%);
   --input: oklch(1 0 0 / 10%);
-  --ring: oklch(0.65 0.27 298);
+  --ring: #c4ff00;
 
   /* Direct CSS var for inline use */
-  --accent-color: #A259FF;
-  --accent-color-dim: rgba(162, 89, 255, 0.15);
+  --accent-color: #c4ff00;
+  --accent-color-dim: rgba(196, 255, 0, 0.15);
 }
 
 @layer base {
@@ -91,24 +91,24 @@
   }
 
   body {
-    background-color: var(--color-background);
+    background-color: #0a0a0a;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     overflow-x: hidden;
   }
 
-  ::-webkit-scrollbar        { width: 4px; }
+  ::-webkit-scrollbar        { width: 6px; }
   ::-webkit-scrollbar-track  { background: transparent; }
-  ::-webkit-scrollbar-thumb  { background: oklch(1 0 0 / 10%); border-radius: 99px; }
-  ::-webkit-scrollbar-thumb:hover { background: oklch(0.65 0.27 298 / 55%); }
+  ::-webkit-scrollbar-thumb  { background: rgba(196, 255, 0, 0.3); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(196, 255, 0, 0.6); }
 
   ::selection {
-    background: oklch(0.65 0.27 298 / 28%);
+    background: rgba(196, 255, 0, 0.2);
     color: oklch(0.97 0.005 90);
   }
 
   :focus-visible {
-    outline: 2px solid oklch(0.65 0.27 298);
+    outline: 2px solid #c4ff00;
     outline-offset: 3px;
   }
 }
@@ -116,19 +116,19 @@
 /* ─── Utilities ──────────────────────────────────────────────── */
 @layer utilities {
 
-  /* Violet glow helpers */
+  /* Green glow helpers */
   .v-glow {
-    box-shadow: 0 0 48px -10px rgba(162, 89, 255, 0.45);
+    box-shadow: 0 0 48px -10px rgba(196, 255, 0, 0.45);
   }
   .v-glow-sm {
-    box-shadow: 0 0 24px -6px rgba(162, 89, 255, 0.35);
+    box-shadow: 0 0 24px -6px rgba(196, 255, 0, 0.35);
   }
   .v-glow-text {
-    text-shadow: 0 0 40px rgba(162, 89, 255, 0.55);
+    text-shadow: 0 0 40px rgba(196, 255, 0, 0.55);
   }
   .v-glow-border {
-    box-shadow: 0 0 0 1px rgba(162, 89, 255, 0.25),
-                0 0 20px -4px rgba(162, 89, 255, 0.2);
+    box-shadow: 0 0 0 1px rgba(196, 255, 0, 0.25),
+                0 0 20px -4px rgba(196, 255, 0, 0.2);
   }
 
   /* Dividers */
@@ -149,7 +149,7 @@
     font-weight: 600;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: #A259FF;
+    color: #c4ff00;
   }
 
   /* Orb blur */
