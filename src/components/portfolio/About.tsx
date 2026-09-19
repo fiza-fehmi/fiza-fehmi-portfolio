@@ -24,9 +24,9 @@ function SplitHeadline({ triggered }: { triggered: boolean }) {
                     color: isLast ? "#A259FF" : "white",
                     animation: triggered ? `slideReveal 0.6s cubic-bezier(0.16,1,0.3,1) forwards` : "none",
                     animationDelay: `${wi * 80 + ci * 28}ms`,
-                    opacity: triggered ? undefined : 0,
+                    opacity: 1,
                     ...(ch === " " ? { width: "0.3em" } : {}),
-                    ...(isLast ? { filter: triggered ? "drop-shadow(0 0 20px rgba(162,89,255,0.5))" : "none" } : {}),
+                    ...(isLast ? { filter: "drop-shadow(0 0 20px rgba(162,89,255,0.5))" } : {}),
                   }}
                 >
                   {ch}
@@ -136,19 +136,19 @@ export function About() {
 
       <div style={{ maxWidth: 1280, margin: "0 auto", position: "relative", zIndex: 1 }}>
         {/* Label */}
-        <div style={{ marginBottom: "4rem", opacity: inView ? 1 : 0, transform: inView ? "none" : "translateY(16px)", transition: "all 0.6s ease" }}>
+        <div style={{ marginBottom: "4rem", opacity: 1, transform: inView ? "none" : "translateY(16px)", transition: "all 0.6s ease" }}>
           <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#A259FF" }}>01 — About Me</span>
         </div>
 
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-start">
           {/* Left */}
-          <div style={{ animation: inView ? "slideInLeft 0.7s ease forwards" : "none", opacity: inView ? undefined : 0 }}>
+          <div style={{ opacity: 1, animation: inView ? "slideInLeft 0.7s ease forwards" : "none" }}>
             <SplitHeadline triggered={inView} />
             <div style={{ marginTop: "2rem", height: 1, borderRadius: 999, background: "linear-gradient(90deg, #A259FF, transparent)", width: inView ? "220px" : "0px", transition: "width 1.3s cubic-bezier(0.16,1,0.3,1) 0.5s" }} aria-hidden="true" />
           </div>
 
           {/* Right */}
-          <div style={{ animation: inView ? "slideInRight 0.7s ease 0.15s forwards" : "none", opacity: inView ? undefined : 0 }}>
+          <div style={{ opacity: 1, animation: inView ? "slideInRight 0.7s ease 0.15s forwards" : "none" }}>
             <p style={{ fontSize: "clamp(0.95rem,1.5vw,1.05rem)", lineHeight: 1.75, color: "rgba(255,255,255,0.5)" }}>
               I'm a full-stack web developer who enjoys turning ideas into clean, interactive and useful digital products.
             </p>

@@ -63,7 +63,7 @@ function TimelineItem({ item, index, lineProgress }: { item: typeof ITEMS[number
         background: hovered ? "rgba(162,89,255,0.03)" : "transparent",
         borderLeft: hovered ? "2px solid rgba(162,89,255,0.2)" : "2px solid transparent",
         transition: "background 0.3s ease, border-color 0.3s ease",
-        opacity: inView ? 1 : 0,
+        opacity: 1,
         transform: inView ? "translateX(0)" : "translateX(-28px)",
         transitionDuration: "0.6s",
         transitionDelay: `${index * 100}ms`,
@@ -139,7 +139,7 @@ export function Experience() {
       <div style={{ maxWidth: 1280, margin: "0 auto", position: "relative", zIndex: 1 }}>
 
         {/* Header */}
-        <div style={{ marginBottom: "4rem", opacity: inView ? 1 : 0, transform: inView ? "none" : "translateY(20px)", transition: "all 0.6s ease" }}>
+        <div style={{ marginBottom: "4rem", opacity: 1, transform: inView ? "none" : "translateY(20px)", transition: "all 0.6s ease" }}>
           <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#A259FF" }}>03 — Experience</span>
           <h2 className="font-display font-black" style={{ marginTop: "1rem", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
             {["WHERE I'VE", "BEEN."].map((line, i) => (
@@ -150,7 +150,7 @@ export function Experience() {
                   color: "white",
                   animation: inView ? `slideReveal 0.7s cubic-bezier(0.16,1,0.3,1) forwards` : "none",
                   animationDelay: `${100 + i * 120}ms`,
-                  opacity: inView ? undefined : 0,
+                  opacity: 1,
                 }}>
                   {line}
                 </span>

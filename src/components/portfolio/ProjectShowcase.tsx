@@ -328,7 +328,7 @@ export function ProjectShowcase() {
         <div
           className="mb-16 flex items-end justify-between transition-all duration-700"
           style={{
-            opacity: inView ? 1 : 0,
+            opacity: 1,
             transform: inView ? "translateY(0)" : "translateY(20px)",
           }}
         >

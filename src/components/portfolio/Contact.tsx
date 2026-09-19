@@ -93,7 +93,7 @@ export function Contact() {
       <div style={{ maxWidth: 1280, margin: "0 auto", position: "relative", zIndex: 1 }}>
 
         {/* Label */}
-        <div style={{ marginBottom: "2.5rem", opacity: inView ? 1 : 0, transform: inView ? "none" : "translateY(16px)", transition: "all 0.6s ease" }}>
+        <div style={{ marginBottom: "2.5rem", opacity: 1, transform: inView ? "none" : "translateY(16px)", transition: "all 0.6s ease" }}>
           <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#A259FF" }}>04 — Contact</span>
         </div>
 
@@ -129,7 +129,7 @@ export function Contact() {
               GOOD.
             </span>
           </div>
-          <p style={{ marginTop: "1.5rem", maxWidth: 440, fontSize: "0.95rem", lineHeight: 1.75, color: "rgba(255,255,255,0.35)", opacity: inView ? 1 : 0, transform: inView ? "none" : "translateY(12px)", transition: "all 0.7s ease 0.5s" }}>
+          <p style={{ marginTop: "1.5rem", maxWidth: 440, fontSize: "0.95rem", lineHeight: 1.75, color: "rgba(255,255,255,0.35)", opacity: 1, transform: inView ? "none" : "translateY(12px)", transition: "all 0.7s ease 0.5s" }}>
             Have an idea, project or opportunity? Let's turn it into something useful.
           </p>
         </div>
@@ -138,7 +138,7 @@ export function Contact() {
         <div className="grid gap-10 lg:grid-cols-[340px_1fr] lg:gap-20">
 
           {/* Left info */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", opacity: inView ? 1 : 0, transform: inView ? "none" : "translateY(20px)", transition: "all 0.7s ease 0.1s" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", opacity: 1, transform: inView ? "none" : "translateY(20px)", transition: "all 0.7s ease 0.1s" }}>
             {/* Email */}
             <a href="mailto:fzafehmi@gmail.com"
               style={{ display: "flex", alignItems: "flex-start", gap: 16, borderRadius: 16, border: "1px solid rgba(255,255,255,0.06)", padding: "1.25rem", background: "rgba(255,255,255,0.01)", textDecoration: "none", transition: "all 0.3s ease" }}
@@ -182,7 +182,7 @@ export function Contact() {
             </div>
             <Field id="c-msg" name="message" label="Message" placeholder="Tell me about your project or idea…" required rows={5} value={form.message} onChange={set("message")} triggered={inView} delay={540} />
 
-            <div style={{ opacity: inView ? 1 : 0, transform: inView ? "none" : "translateY(16px)", transition: "all 0.5s ease 660ms" }}>
+            <div style={{ opacity: 1, transform: inView ? "none" : "translateY(16px)", transition: "all 0.5s ease 660ms" }}>
               <button type="submit"
                 style={{ display: "flex", alignItems: "center", gap: 10, borderRadius: 999, border: "1px solid rgba(162,89,255,0.35)", padding: "14px 28px", fontSize: "0.7rem", fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "#A259FF", background: "transparent", cursor: "pointer", transition: "all 0.25s ease" }}
                 onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "#A259FF"; el.style.color = "#050505"; el.style.borderColor = "#A259FF"; el.style.boxShadow = "0 0 24px rgba(162,89,255,0.4)"; }}
