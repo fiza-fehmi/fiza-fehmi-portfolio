@@ -1,51 +1,57 @@
 import { useEffect, useRef } from "react";
 
-/**
- * Subtle custom cursor — only shown on pointer devices.
- * A small dot that follows with a slight spring delay.
- * Disappears on touch and respects reduced-motion preference.
- */
 export function CustomCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const pos = useRef({ x: -100, y: -100 });
-  const ring = useRef({ x: -100, y: -100 });
-  const raf = useRef<number>(0);
+  const dot  = useRef<HTMLDivElement>(null);
+  const ring = useRef<HTMLDivElement>(null);
+  const pos  = useRef({ x: -200, y: -200 });
+  const lag  = useRef({ x: -200, y: -200 });
+  const raf  = useRef<number>(0);
+  const active = useRef(false);
 
   useEffect(() => {
-    // Only activate on pointer-fine devices
+    /* only on pointer-fine (mouse) devices */
     if (!window.matchMedia("(pointer: fine)").matches) return;
-    // Respect reduced motion
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const dot = dotRef.current;
-    const ringEl = ringRef.current;
-    if (!dot || !ringEl) return;
+    const d = dot.current;
+    const r = ring.current;
+    if (!d || !r) return;
+
+    /* show cursor elements */
+    d.style.display = "block";
+    r.style.display = "block";
 
     const onMove = (e: MouseEvent) => {
       pos.current = { x: e.clientX, y: e.clientY };
     };
 
     const tick = () => {
-      // Dot: instant
-      dot.style.transform = `translate(${pos.current.x - 4}px, ${pos.current.y - 4}px)`;
+      /* dot snaps instantly */
+      d.style.transform = `translate(${pos.current.x - 4}px, ${pos.current.y - 4}px)`;
 
-      // Ring: lerp toward cursor
-      ring.current.x += (pos.current.x - ring.current.x) * 0.12;
-      ring.current.y += (pos.current.y - ring.current.y) * 0.12;
-      ringEl.style.transform = `translate(${ring.current.x - 16}px, ${ring.current.y - 16}px)`;
+      /* ring lerps */
+      lag.current.x += (pos.current.x - lag.current.x) * 0.12;
+      lag.current.y += (pos.current.y - lag.current.y) * 0.12;
+      r.style.transform = `translate(${lag.current.x - 18}px, ${lag.current.y - 18}px)`;
 
       raf.current = requestAnimationFrame(tick);
     };
 
-    // Hover state: expand ring on interactive elements
-    const onEnter = () => ringEl.classList.add("cursor-hover");
-    const onLeave = () => ringEl.classList.remove("cursor-hover");
+    const onEnter = () => {
+      active.current = true;
+      r.style.width  = "44px";
+      r.style.height = "44px";
+      r.style.borderColor = "rgba(162,89,255,0.55)";
+    };
+    const onLeave = () => {
+      active.current = false;
+      r.style.width  = "36px";
+      r.style.height = "36px";
+      r.style.borderColor = "rgba(162,89,255,0.25)";
+    };
+
     const interactives = document.querySelectorAll("a, button, [role='tab']");
-    for (const el of interactives) {
-      el.addEventListener("mouseenter", onEnter);
-      el.addEventListener("mouseleave", onLeave);
-    }
+    interactives.forEach(el => { el.addEventListener("mouseenter", onEnter); el.addEventListener("mouseleave", onLeave); });
 
     window.addEventListener("mousemove", onMove);
     raf.current = requestAnimationFrame(tick);
@@ -53,39 +59,29 @@ export function CustomCursor() {
     return () => {
       window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(raf.current);
-      for (const el of interactives) {
-        el.removeEventListener("mouseenter", onEnter);
-        el.removeEventListener("mouseleave", onLeave);
-      }
+      interactives.forEach(el => { el.removeEventListener("mouseenter", onEnter); el.removeEventListener("mouseleave", onLeave); });
     };
   }, []);
 
   return (
     <>
-      {/* Dot */}
-      <div
-        ref={dotRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9999] h-2 w-2 rounded-full bg-[#A259FF] hidden md:block"
-        aria-hidden="true"
-        style={{ willChange: "transform" }}
-      />
-      {/* Ring */}
-      <div
-        ref={ringRef}
-        className="cursor-ring pointer-events-none fixed left-0 top-0 z-[9998] h-8 w-8 rounded-full border border-[#A259FF]/30 hidden md:block transition-[width,height,border-color] duration-200"
-        aria-hidden="true"
-        style={{ willChange: "transform" }}
-      />
-      <style>{`
-        .cursor-hover.cursor-ring {
-          width: 48px;
-          height: 48px;
-          border-color: rgba(162,89,255,0.5);
-        }
-        @media (hover: none) {
-          .cursor-ring, [data-dot] { display: none !important; }
-        }
-      `}</style>
+      {/* dot */}
+      <div ref={dot} aria-hidden="true" style={{
+        display: "none",
+        position: "fixed", left: 0, top: 0, zIndex: 9999,
+        width: 8, height: 8, borderRadius: "50%", background: "#A259FF",
+        pointerEvents: "none", willChange: "transform",
+        boxShadow: "0 0 6px rgba(162,89,255,0.7)",
+      }} />
+      {/* ring */}
+      <div ref={ring} aria-hidden="true" style={{
+        display: "none",
+        position: "fixed", left: 0, top: 0, zIndex: 9998,
+        width: 36, height: 36, borderRadius: "50%",
+        border: "1px solid rgba(162,89,255,0.25)",
+        pointerEvents: "none", willChange: "transform",
+        transition: "width 0.2s ease, height 0.2s ease, border-color 0.2s ease",
+      }} />
     </>
   );
 }
