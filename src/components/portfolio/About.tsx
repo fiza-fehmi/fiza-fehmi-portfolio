@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { useInView } from "../../hooks/useInView";
 
 const TECH = ["React", "Node.js", "Express", "MongoDB", "Mongoose", "JWT", "Tailwind CSS", "JavaScript", "REST APIs", "Git"];
@@ -80,7 +80,7 @@ function StatCard({ value, suffix, label, delay, triggered }: { value: number; s
       style={{
         borderRadius: 16, border: hovered ? "1px solid rgba(162,89,255,0.3)" : "1px solid rgba(255,255,255,0.06)",
         padding: "1.5rem", cursor: "default", position: "relative", overflow: "hidden",
-        opacity: triggered ? 1 : 0,
+        opacity: 1,
         transform: triggered ? hovered ? "translateY(-8px) scale(1.02)" : "translateY(0)" : "translateY(24px)",
         transitionDelay: `${delay}ms`,
         background: hovered ? "rgba(162,89,255,0.07)" : "rgba(255,255,255,0.02)",

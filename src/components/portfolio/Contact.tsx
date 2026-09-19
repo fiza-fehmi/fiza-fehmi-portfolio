@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+﻿import { useRef, useState } from "react";
 import { Send, Mail, MapPin, CheckCircle } from "lucide-react";
 import { useInView } from "../../hooks/useInView";
 
@@ -28,7 +28,7 @@ function Field({ id, name, label, type="text", placeholder, required, rows, trig
   const filled = value.length > 0;
 
   return (
-    <div style={{ opacity: triggered ? 1 : 0, transform: triggered ? "translateY(0)" : "translateY(18px)", transition: `opacity 0.5s ease ${delay}ms, transform 0.5s ease ${delay}ms` }}>
+    <div style={{ animation: `fadeUp 0.6s ease ${delay}ms both` }}>
       <label htmlFor={id} style={{ display: "block", marginBottom: 8, fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: focused ? "#A259FF" : "rgba(255,255,255,0.25)", transition: "color 0.2s ease" }}>
         {label}
       </label>
@@ -109,7 +109,7 @@ export function Contact() {
                 letterSpacing: "-0.02em",
                 animation: inView ? `slideReveal 0.75s cubic-bezier(0.16,1,0.3,1) forwards` : "none",
                 animationDelay: `${i * 130}ms`,
-                opacity: inView ? undefined : 0,
+                opacity: 1,
               }}>
                 {line}
               </span>
@@ -124,7 +124,7 @@ export function Contact() {
               letterSpacing: "-0.02em",
               animation: inView ? `slideReveal 0.75s cubic-bezier(0.16,1,0.3,1) forwards` : "none",
               animationDelay: "260ms",
-              opacity: inView ? undefined : 0,
+              opacity: 1,
             }}>
               GOOD.
             </span>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+﻿import { useEffect, useRef, useState, useCallback } from "react";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useInView } from "../../hooks/useInView";
 
@@ -103,7 +103,7 @@ function MockBrowser({
       className="relative w-full overflow-hidden rounded-2xl border border-white/8"
       style={{
         background: project.bg,
-        opacity: entering ? 1 : 0,
+        opacity: 1,
         transform: entering
           ? `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg) scale(1)`
           : "scale(0.96) translateY(16px)",
@@ -382,7 +382,7 @@ export function ProjectShowcase() {
           <div
             className="transition-all duration-400"
             style={{
-              opacity: entering ? 1 : 0,
+              opacity: 1,
               transform: entering
                 ? "translateX(0)"
                 : `translateX(${direction * -20}px)`,
@@ -425,7 +425,7 @@ export function ProjectShowcase() {
                     className="rounded-full border border-white/8 px-3 py-1 font-mono text-[11px] text-white/30
                                transition-all duration-300 hover:border-[#A259FF]/40 hover:text-[#A259FF]"
                     style={{
-                      opacity: entering ? 1 : 0,
+                      opacity: 1,
                       transform: entering ? "translateY(0)" : "translateY(8px)",
                       transition: `opacity 0.4s ease, transform 0.4s ease`,
                       transitionDelay: `${250 + i * 50}ms`,

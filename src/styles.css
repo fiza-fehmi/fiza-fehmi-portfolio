@@ -286,3 +286,36 @@
   from { transform: translateY(100%); opacity: 0; }
   to   { transform: translateY(0); opacity: 1; }
 }
+
+/* ─── SSR hydration safety ─────────────────────────────────────
+   Components with opacity:0 initial state (set server-side)
+   get overridden here so content is ALWAYS visible.
+   JS animations run on top as progressive enhancement.
+─────────────────────────────────────────────────────────────── */
+@layer base {
+  /* Ensure sections are never invisible on load */
+  #about,
+  #projects,
+  #experience,
+  #contact {
+    opacity: 1 !important;
+  }
+
+  /* All direct section children should be visible */
+  #about > *,
+  #experience > *,
+  #contact > * {
+    opacity: 1 !important;
+  }
+}
+
+/* Override any inline opacity:0 that SSR bakes in */
+@keyframes ensureVisible {
+  from { opacity: 1; }
+  to   { opacity: 1; }
+}
+
+.force-visible {
+  animation: ensureVisible 0.01s forwards !important;
+  opacity: 1 !important;
+}
