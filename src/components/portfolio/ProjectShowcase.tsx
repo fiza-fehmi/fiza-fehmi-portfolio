@@ -1,228 +1,487 @@
-﻿import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { useInView } from "../../hooks/useInView";
 
 const PROJECTS = [
   {
-    num:"01", title:"Decoristic",       category:"Frontend / Furniture",
-    desc:"Modern, responsive furniture and home décor website with a clean, user-friendly UI.",
-    tech:["HTML","CSS","Responsive Design"],
-    color:"#C8A97E", bg:"linear-gradient(135deg,#1a1208,#2e2010)",
-    live:"https://decoristic-website.vercel.app", github:"https://github.com/fiza-fehmi/decoristic-website",
+    num: "01",
+    title: "Decoristic",
+    category: "Frontend / Furniture",
+    description:
+      "Modern, responsive furniture and home décor website showcasing stylish collections with a clean, user-friendly UI design.",
+    tech: ["HTML", "CSS", "Responsive Design"],
+    color: "#C8A97E",
+    bg: "linear-gradient(135deg, #1a1208 0%, #2e2010 50%, #1a1208 100%)",
+    live: "https://decoristic-website.vercel.app",
+    github: "https://github.com/fiza-fehmi/decoristic-website",
   },
   {
-    num:"02", title:"Feane Fast Food",  category:"Frontend / Restaurant",
-    desc:"Responsive fast food restaurant website with menus, offers and online ordering features.",
-    tech:["HTML","CSS","JavaScript"],
-    color:"#FF6B35", bg:"linear-gradient(135deg,#1a0800,#2e1200)",
-    live:"https://feane-fast-food-website.vercel.app", github:"https://github.com/fiza-fehmi/feane-fast-food-website",
+    num: "02",
+    title: "Feane Fast Food",
+    category: "Frontend / Restaurant",
+    description:
+      "Responsive fast food restaurant website with menus, offers and online ordering features. Fresh design with bold flavors in every pixel.",
+    tech: ["HTML", "CSS", "JavaScript"],
+    color: "#FF6B35",
+    bg: "linear-gradient(135deg, #1a0a00 0%, #2e1200 50%, #1a0a00 100%)",
+    live: "https://feane-fast-food-website.vercel.app",
+    github: "https://github.com/fiza-fehmi/feane-fast-food-website",
   },
   {
-    num:"03", title:"Ecommerce Store",  category:"Frontend / E-commerce",
-    desc:"Modern e-commerce store with product listings, cart functionality and clean shopping UX.",
-    tech:["React.js","Vite","JavaScript"],
-    color:"#E91E8C", bg:"linear-gradient(135deg,#1a0010,#2e0020)",
-    live:"https://ecommerce-store-1hqv.vercel.app", github:"https://github.com/fiza-fehmi/Ecommerce-Store",
+    num: "03",
+    title: "Ecommerce Store",
+    category: "Frontend / E-commerce",
+    description:
+      "Modern e-commerce store built with React and Vite. Features product listings, cart functionality and a clean responsive shopping experience.",
+    tech: ["React.js", "Vite", "JavaScript"],
+    color: "#E91E8C",
+    bg: "linear-gradient(135deg, #1a0010 0%, #2e0020 50%, #1a0010 100%)",
+    live: "https://ecommerce-store-1hqv.vercel.app",
+    github: "https://github.com/fiza-fehmi/Ecommerce-Store",
   },
   {
-    num:"04", title:"Property Hub",     category:"Frontend / Real Estate",
-    desc:"Responsive real estate website showcasing Apartments, Villas, Commercial Spaces and Plots.",
-    tech:["HTML","CSS","JavaScript"],
-    color:"#2196F3", bg:"linear-gradient(135deg,#000d1a,#001830)",
-    live:"https://fiza-fehmi.github.io/Property_Hub/", github:"https://github.com/fiza-fehmi/Property_Hub",
+    num: "04",
+    title: "Property Hub",
+    category: "Frontend / Real Estate",
+    description:
+      "Responsive real estate website showcasing properties by categories — Apartments, Villas, Commercial Spaces and Plots.",
+    tech: ["HTML", "CSS", "JavaScript"],
+    color: "#2196F3",
+    bg: "linear-gradient(135deg, #000d1a 0%, #001830 50%, #000d1a 100%)",
+    live: "https://fiza-fehmi.github.io/Property_Hub/",
+    github: "https://github.com/fiza-fehmi/Property_Hub",
   },
   {
-    num:"05", title:"Postage",          category:"Full-Stack / Social",
-    desc:"Full-stack social platform with JWT auth, REST APIs, posts, feed and image uploads.",
-    tech:["React.js","Node.js","Express.js","MongoDB","JWT","Multer"],
-    color:"#5865F2", bg:"linear-gradient(135deg,#0a0a1a,#0d0e2e)",
-    live:null, github:"https://github.com/fiza-fehmi",
+    num: "05",
+    title: "Postage",
+    category: "Full-Stack / Social",
+    description:
+      "Full-stack social platform with login, posts, feed, JWT authentication, authorization, REST APIs and image uploads.",
+    tech: ["React.js", "Node.js", "Express.js", "MongoDB", "JWT", "Multer"],
+    color: "#5865F2",
+    bg: "linear-gradient(135deg, #0a0a1a 0%, #0d0e2e 50%, #0a0a1a 100%)",
+    live: null,
+    github: "https://github.com/fiza-fehmi",
   },
   {
-    num:"06", title:"Coffee Shop",      category:"Frontend / Lifestyle",
-    desc:"Modern, responsive coffee shop website with warm aesthetics and a clean menu showcase.",
-    tech:["HTML","CSS"],
-    color:"#8B5E3C", bg:"linear-gradient(135deg,#120a04,#241408)",
-    live:"https://fiza-fehmi.github.io/coffees-website/", github:"https://github.com/fiza-fehmi/coffees-website",
+    num: "06",
+    title: "Coffee Shop",
+    category: "Frontend / Lifestyle",
+    description:
+      "Modern, responsive coffee shop website with warm aesthetics, menu showcase and a clean browsing experience.",
+    tech: ["HTML", "CSS"],
+    color: "#8B5E3C",
+    bg: "linear-gradient(135deg, #120a04 0%, #241408 50%, #120a04 100%)",
+    live: "https://fiza-fehmi.github.io/coffees-website/",
+    github: "https://github.com/fiza-fehmi/coffees-website",
   },
-] as const;
+];
 
-type Project = typeof PROJECTS[number];
-
-function MockBrowser({ p, show }: { p: Project; show: boolean }) {
-  const tiltRef = useRef<HTMLDivElement>(null);
-
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = tiltRef.current; if (!el) return;
-    const r = el.getBoundingClientRect();
-    const x = ((e.clientX-r.left)/r.width-0.5)*10;
-    const y = ((e.clientY-r.top)/r.height-0.5)*-8;
-    el.style.transform = `perspective(800px) rotateX(${y}deg) rotateY(${x}deg) scale(1.01)`;
-  };
-  const onLeave = () => { if (tiltRef.current) tiltRef.current.style.transform = "none"; };
-
+/* ── animated browser mock with shimmer ─────────────────────── */
+function MockBrowser({
+  project,
+  entering,
+}: {
+  project: (typeof PROJECTS)[number];
+  entering: boolean;
+}) {
   return (
-    <div ref={tiltRef} onMouseMove={onMove} onMouseLeave={onLeave}
-      style={{ width:"100%", borderRadius:16, overflow:"hidden", border:"1px solid rgba(255,255,255,0.07)", background:p.bg, opacity:show?1:0, transform:show?"none":"scale(0.96) translateY(12px)", transition:"all 0.45s ease", willChange:"transform" }}
-      aria-label={`${p.title} preview`} role="img"
+    <div
+      className="relative w-full overflow-hidden rounded-2xl border border-white/8 transition-all duration-500"
+      style={{
+        background: project.bg,
+        opacity: entering ? 1 : 0,
+        transform: entering ? "scale(1) translateY(0)" : "scale(0.96) translateY(16px)",
+      }}
+      role="img"
+      aria-label={`${project.title} project preview`}
     >
-      {/* browser bar */}
-      <div style={{ display:"flex", alignItems:"center", gap:6, padding:"10px 14px", borderBottom:"1px solid rgba(255,255,255,0.05)" }}>
-        <div style={{ width:10,height:10,borderRadius:"50%",background:"rgba(255,80,80,0.6)" }}/>
-        <div style={{ width:10,height:10,borderRadius:"50%",background:"rgba(255,190,0,0.6)" }}/>
-        <div style={{ width:10,height:10,borderRadius:"50%",background:"rgba(0,200,80,0.6)" }}/>
-        <div style={{ flex:1,marginLeft:8,background:"rgba(255,255,255,0.04)",borderRadius:999,padding:"3px 10px",fontFamily:"JetBrains Mono,monospace",fontSize:"0.62rem",color:"rgba(255,255,255,0.2)",textAlign:"center" }}>
-          {p.live ? p.live.replace("https://","") : `${p.title.toLowerCase().replace(/\s/g,"-")}.dev`}
+      {/* Browser chrome */}
+      <div className="flex items-center gap-2 border-b border-white/6 px-4 py-3">
+        <div className="h-2.5 w-2.5 rounded-full bg-red-500/60" />
+        <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/60" />
+        <div className="h-2.5 w-2.5 rounded-full bg-green-500/60" />
+        <div className="mx-4 flex-1 rounded-full bg-white/5 px-3 py-1 text-center font-mono text-[10px] text-white/20">
+          {project.live ? project.live.replace("https://", "") : `${project.title.toLowerCase().replace(/\s/g, "-")}.dev`}
         </div>
       </div>
-      {/* mock content */}
-      <div style={{ position:"relative", height:280, display:"flex", alignItems:"center", justifyContent:"center", padding:"2rem" }}>
-        <div aria-hidden="true" style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
-          <div style={{ width:240, height:240, borderRadius:"50%", background:p.color, filter:"blur(80px)", opacity:0.2, animation:"pulseGlow 3s ease-in-out infinite" }} />
+
+      {/* Content area */}
+      <div className="relative flex h-72 md:h-96 flex-col items-center justify-center p-8">
+        {/* Animated orb */}
+        <div
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          aria-hidden="true"
+        >
+          <div
+            className="h-72 w-72 rounded-full"
+            style={{
+              background: project.color,
+              filter: "blur(90px)",
+              opacity: 0.18,
+              animation: "pulseGlow 3.5s ease-in-out infinite",
+            }}
+          />
         </div>
-        <div style={{ position:"relative", zIndex:1, width:"100%", maxWidth:280 }}>
-          <div style={{ height:24, borderRadius:8, width:"60%", margin:"0 auto 12px", background:`${p.color}22`, overflow:"hidden" }}>
-            <div style={{ height:"100%", background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent)", backgroundSize:"400px 100%", animation:"shimmer 2s linear infinite" }} />
+
+        {/* Skeleton UI with shimmer */}
+        <div className="relative z-10 w-full max-w-xs space-y-3">
+          {/* Shimmer title bar */}
+          <div
+            className="h-7 rounded-lg w-2/3 mx-auto overflow-hidden relative"
+            style={{ background: `${project.color}22` }}
+          >
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%)",
+                backgroundSize: "200% 100%",
+                animation: "shimmer 2.2s linear infinite",
+              }}
+            />
           </div>
-          {[100,85,70].map((w,i)=>(
-            <div key={i} style={{ height:9, borderRadius:999, marginBottom:8, width:`${w}%`, background:"rgba(255,255,255,0.05)", overflow:"hidden" }}>
-              <div style={{ height:"100%", background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent)", backgroundSize:"400px 100%", animation:`shimmer ${2+i*0.3}s linear infinite ${i*0.15}s` }} />
+
+          {/* Content lines */}
+          {[100, 85, 70].map((w, i) => (
+            <div
+              key={i}
+              className="h-2.5 rounded-full overflow-hidden"
+              style={{ width: `${w}%`, background: "rgba(255,255,255,0.05)" }}
+            >
+              <div
+                style={{
+                  height: "100%",
+                  background:
+                    "linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)",
+                  backgroundSize: "200% 100%",
+                  animation: `shimmer ${2.5 + i * 0.3}s linear infinite`,
+                  animationDelay: `${i * 0.2}s`,
+                }}
+              />
             </div>
           ))}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginTop:16 }}>
-            {[0,1,2].map(i=>(
-              <div key={i} style={{ height:52, borderRadius:10, background:`${p.color}${i===0?"22":"0e"}`, overflow:"hidden", position:"relative" }}>
-                <div style={{ position:"absolute", inset:0, background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent)", backgroundSize:"400px 100%", animation:`shimmer ${2+i*0.4}s linear infinite ${i*0.2}s` }} />
+
+          {/* Cards row */}
+          <div className="mt-5 grid grid-cols-3 gap-2">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="h-16 rounded-xl relative overflow-hidden"
+                style={{ background: `${project.color}${i === 0 ? "22" : "12"}` }}
+              >
+                <div
+                  style={{
+                    position: "absolute", inset: 0,
+                    background:
+                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)",
+                    backgroundSize: "200% 100%",
+                    animation: `shimmer ${2 + i * 0.4}s linear infinite`,
+                    animationDelay: `${i * 0.3}s`,
+                  }}
+                />
               </div>
             ))}
           </div>
+
+          {/* CTA button skeleton */}
+          <div className="mt-4 flex justify-center">
+            <div
+              className="h-8 w-28 rounded-full overflow-hidden"
+              style={{ background: `${project.color}28` }}
+            >
+              <div
+                style={{
+                  height: "100%",
+                  background:
+                    "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)",
+                  backgroundSize: "200% 100%",
+                  animation: "shimmer 2s linear infinite",
+                }}
+              />
+            </div>
+          </div>
         </div>
-        <span aria-hidden="true" style={{ position:"absolute", bottom:12, right:16, fontFamily:"Sora,sans-serif", fontWeight:900, fontSize:"4.5rem", color:p.color, opacity:0.05, lineHeight:1, userSelect:"none" }}>{p.num}</span>
+
+        {/* Watermark number */}
+        <div
+          className="absolute bottom-4 right-6 font-display text-[5rem] font-black select-none leading-none"
+          style={{ color: project.color, opacity: 0.06 }}
+          aria-hidden="true"
+        >
+          {project.num}
+        </div>
       </div>
     </div>
   );
 }
 
+/* ── progress bar ────────────────────────────────────────────── */
+function ProgressBar({ active }: { active: number }) {
+  return (
+    <div className="flex gap-1.5" role="tablist" aria-label="Project navigation">
+      {PROJECTS.map((_, i) => (
+        <div key={i} className="h-0.5 flex-1 rounded-full bg-white/10 overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-700"
+            style={{
+              width: i <= active ? "100%" : "0%",
+              background:
+                i === active
+                  ? "#A259FF"
+                  : "rgba(162,89,255,0.35)",
+              transitionDelay: i < active ? "0ms" : "0ms",
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── main showcase ───────────────────────────────────────────── */
 export function ProjectShowcase() {
-  const [idx,      setIdx]      = useState(0);
-  const [show,     setShow]     = useState(true);
-  const [dir,      setDir]      = useState<1|-1>(1);
-  const sectionRef = useRef<HTMLElement>(null);
-  const accumRef   = useRef(0);
-  const lockRef    = useRef(false);
-  const STEP = 130;
+  const [active, setActive]       = useState(0);
+  const [direction, setDirection] = useState<1 | -1>(1);
+  const [entering, setEntering]   = useState(true);
+  const { ref: sectionRef, inView } = useInView({ threshold: 0.05 });
+  const scrollAccum = useRef(0);
+  const animRef     = useRef(false);
+  const STEP = 140;
 
   const goTo = useCallback((next: number) => {
-    if (lockRef.current || next===idx) return;
-    lockRef.current=true;
-    setDir(next>idx?1:-1);
-    setShow(false);
-    setTimeout(()=>{ setIdx(next); setShow(true); lockRef.current=false; },350);
-  },[idx]);
+    if (animRef.current || next === active) return;
+    animRef.current = true;
+    setDirection(next > active ? 1 : -1);
+    setEntering(false);
+    setTimeout(() => {
+      setActive(next);
+      setEntering(true);
+      animRef.current = false;
+    }, 380);
+  }, [active]);
 
-  useEffect(()=>{
-    const fn=(e:WheelEvent)=>{
-      const el=sectionRef.current; if(!el) return;
-      const r=el.getBoundingClientRect();
-      if(r.top > window.innerHeight*0.6 || r.bottom < window.innerHeight*0.4) return;
-      accumRef.current+=e.deltaY;
-      if(accumRef.current>STEP){accumRef.current=0;goTo(Math.min(idx+1,PROJECTS.length-1));}
-      else if(accumRef.current<-STEP){accumRef.current=0;goTo(Math.max(idx-1,0));}
+  /* wheel hijack */
+  useEffect(() => {
+    const onWheel = (e: WheelEvent) => {
+      const section = sectionRef.current as HTMLElement | null;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const inside = rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.4;
+      if (!inside) return;
+      scrollAccum.current += e.deltaY;
+      if (scrollAccum.current > STEP) {
+        scrollAccum.current = 0;
+        goTo(Math.min(active + 1, PROJECTS.length - 1));
+      } else if (scrollAccum.current < -STEP) {
+        scrollAccum.current = 0;
+        goTo(Math.max(active - 1, 0));
+      }
     };
-    window.addEventListener("wheel",fn,{passive:true});
-    return ()=>window.removeEventListener("wheel",fn);
-  },[idx,goTo]);
+    window.addEventListener("wheel", onWheel, { passive: true });
+    return () => window.removeEventListener("wheel", onWheel);
+  }, [active, goTo, sectionRef]);
 
-  const p = PROJECTS[idx];
+  const project = PROJECTS[active]!;
 
   return (
-    <section id="projects" ref={sectionRef} style={{ padding:"8rem 3rem", borderTop:"1px solid rgba(255,255,255,0.05)", position:"relative" }}>
-      <div style={{ maxWidth:1280, margin:"0 auto" }}>
+    <section
+      id="projects"
+      ref={sectionRef as React.RefObject<HTMLElement>}
+      className="relative py-32 md:py-40 px-6 md:px-12 lg:px-20 divider"
+      aria-label="Selected work"
+    >
+      {/* Subtle section orb */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 h-[300px] w-[600px] opacity-[0.04]"
+        style={{
+          background: `radial-gradient(ellipse, ${project.color} 0%, transparent 70%)`,
+          filter: "blur(60px)",
+          transition: "background 0.6s ease",
+        }}
+        aria-hidden="true"
+      />
 
-        {/* header */}
-        <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", marginBottom:"4rem" }}>
+      <div className="mx-auto max-w-7xl relative z-10">
+
+        {/* ── Header ── */}
+        <div
+          className="mb-16 flex items-end justify-between transition-all duration-700"
+          style={{
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(20px)",
+          }}
+        >
           <div>
-            <p style={{ fontSize:"0.6rem", fontWeight:700, letterSpacing:"0.18em", textTransform:"uppercase", color:"#A259FF", marginBottom:"1rem" }}>02 — Selected Work</p>
-            <h2 style={{ fontFamily:"Sora,sans-serif", fontWeight:900, lineHeight:0.9, letterSpacing:"-0.02em", margin:0 }}>
-              {["THINGS I'VE","BUILT."].map((line,i)=>(
-                <div key={line}><span style={{ display:"block", fontSize:"clamp(2.5rem,6vw,5rem)", color:"white" }}>{line}</span></div>
-              ))}
+            <span className="label-accent">02 — Selected Work</span>
+            <h2 className="mt-4 font-display font-black leading-[0.9] tracking-tight">
+              <span className="block text-[clamp(2.5rem,6vw,5rem)] text-white">Things I've</span>
+              <span className="block text-[clamp(2.5rem,6vw,5rem)] text-white">built.</span>
             </h2>
           </div>
-          {/* counter + nav */}
-          <div style={{ textAlign:"right" }} className="hidden md:block">
-            <div style={{ fontFamily:"Sora,sans-serif", fontWeight:900, fontSize:"3.5rem", color:"white", lineHeight:1 }}>
-              {String(idx+1).padStart(2,"0")}<span style={{ fontSize:"1.2rem", color:"rgba(255,255,255,0.2)" }}>/{String(PROJECTS.length).padStart(2,"0")}</span>
+
+          {/* Animated counter */}
+          <div className="hidden md:flex flex-col items-end">
+            <div className="flex items-baseline gap-1">
+              <span
+                className="font-display font-black text-white transition-all duration-300"
+                style={{ fontSize: "clamp(2.5rem,5vw,4rem)" }}
+              >
+                {String(active + 1).padStart(2, "0")}
+              </span>
+              <span className="font-display text-xl text-white/20">
+                /{String(PROJECTS.length).padStart(2, "0")}
+              </span>
             </div>
-            <div style={{ display:"flex", gap:8, marginTop:12, justifyContent:"flex-end" }}>
-              {[{fn:()=>goTo(Math.max(idx-1,0)),dis:idx===0,Icon:ChevronLeft},{fn:()=>goTo(Math.min(idx+1,PROJECTS.length-1)),dis:idx===PROJECTS.length-1,Icon:ChevronRight}].map(({fn,dis,Icon},i)=>(
-                <button key={i} onClick={fn} disabled={dis} aria-label={i===0?"Previous":"Next"}
-                  style={{ width:36,height:36,borderRadius:"50%",border:"1px solid rgba(255,255,255,0.1)",background:"none",cursor:dis?"default":"pointer",color:dis?"rgba(255,255,255,0.2)":"rgba(255,255,255,0.5)",display:"flex",alignItems:"center",justifyContent:"center",transition:"all 0.2s" }}
-                  onMouseEnter={e=>{if(!dis){const el=e.currentTarget as HTMLElement;el.style.borderColor="rgba(162,89,255,0.5)";el.style.color="#A259FF";}}}
-                  onMouseLeave={e=>{const el=e.currentTarget as HTMLElement;el.style.borderColor="rgba(255,255,255,0.1)";el.style.color=dis?"rgba(255,255,255,0.2)":"rgba(255,255,255,0.5)";}}
-                ><Icon size={16}/></button>
-              ))}
+            {/* Prev/Next arrows */}
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={() => goTo(Math.max(active - 1, 0))}
+                disabled={active === 0}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/40 transition-all duration-200 hover:border-[#A259FF]/50 hover:text-[#A259FF] disabled:opacity-20"
+                aria-label="Previous project"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => goTo(Math.min(active + 1, PROJECTS.length - 1))}
+                disabled={active === PROJECTS.length - 1}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/40 transition-all duration-200 hover:border-[#A259FF]/50 hover:text-[#A259FF] disabled:opacity-20"
+                aria-label="Next project"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </div>
 
-        {/* showcase */}
-        <div style={{ display:"grid", gap:"4rem", gridTemplateColumns:"1fr 1.4fr", alignItems:"center" }} className="grid-cols-1 md:grid-cols-[1fr_1.4fr]">
+        {/* ── Showcase grid ── */}
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr] lg:gap-16 items-center">
 
-          {/* info panel */}
-          <div style={{ opacity:show?1:0, transform:show?"none":`translateX(${dir*-16}px)`, transition:"all 0.4s ease" }}>
-            <p style={{ fontFamily:"Sora,sans-serif", fontWeight:900, fontSize:"clamp(5rem,10vw,8rem)", color:"rgba(255,255,255,0.04)", lineHeight:1, margin:0, userSelect:"none" }} aria-hidden="true">{p.num}</p>
-            <div style={{ marginTop:"-0.5rem" }}>
-              <p style={{ fontSize:"0.6rem", fontWeight:700, letterSpacing:"0.18em", textTransform:"uppercase", color:"rgba(255,255,255,0.3)", marginBottom:8 }}>{p.category}</p>
-              <h3 style={{ fontFamily:"Sora,sans-serif", fontWeight:900, fontSize:"clamp(2rem,4vw,3.2rem)", lineHeight:1, color:"white", margin:"0 0 0.5rem" }}>{p.title}</h3>
-              {/* color underline */}
-              <div style={{ height:2, borderRadius:999, background:`linear-gradient(90deg,${p.color},transparent)`, width:show?"130px":0, transition:"width 0.5s ease 0.2s" }} aria-hidden="true"/>
-              <p style={{ fontSize:"0.9rem", lineHeight:1.75, color:"rgba(255,255,255,0.45)", margin:"1rem 0 1.5rem" }}>{p.desc}</p>
-              {/* tech */}
-              <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
-                {p.tech.map((t,i)=>(
-                  <span key={t} style={{ borderRadius:999, border:"1px solid rgba(255,255,255,0.07)", padding:"4px 12px", fontFamily:"JetBrains Mono,monospace", fontSize:"0.68rem", color:"rgba(255,255,255,0.35)", opacity:show?1:0, transition:`opacity 0.3s ease ${200+i*50}ms`, cursor:"default" }}>{t}</span>
+          {/* Left — info panel */}
+          <div
+            className="transition-all duration-400"
+            style={{
+              opacity: entering ? 1 : 0,
+              transform: entering
+                ? "translateX(0)"
+                : `translateX(${direction * -20}px)`,
+            }}
+          >
+            <p
+              className="font-display font-black leading-none select-none"
+              style={{ fontSize: "clamp(5rem,12vw,9rem)", color: "rgba(255,255,255,0.04)" }}
+              aria-hidden="true"
+            >
+              {project.num}
+            </p>
+            <div className="-mt-4 md:-mt-6">
+              <span className="label text-white/30">{project.category}</span>
+
+              {/* Title with colour accent underline */}
+              <h3 className="mt-2 font-display text-4xl font-black tracking-tight text-white md:text-5xl">
+                {project.title}
+              </h3>
+              <div
+                className="mt-2 h-0.5 rounded-full"
+                style={{
+                  background: `linear-gradient(90deg, ${project.color}, transparent)`,
+                  width: entering ? "140px" : "0px",
+                  transition: "width 0.6s cubic-bezier(0.16,1,0.3,1)",
+                  transitionDelay: "200ms",
+                }}
+                aria-hidden="true"
+              />
+
+              <p className="mt-4 text-[15px] leading-relaxed text-white/40">
+                {project.description}
+              </p>
+
+              {/* Tech pills */}
+              <div className="mt-5 flex flex-wrap gap-2">
+                {project.tech.map((t, i) => (
+                  <span
+                    key={t}
+                    className="rounded-full border border-white/8 px-3 py-1 font-mono text-[11px] text-white/30
+                               transition-all duration-300 hover:border-[#A259FF]/40 hover:text-[#A259FF]"
+                    style={{
+                      opacity: entering ? 1 : 0,
+                      transform: entering ? "translateY(0)" : "translateY(8px)",
+                      transition: `opacity 0.4s ease, transform 0.4s ease`,
+                      transitionDelay: `${250 + i * 50}ms`,
+                    }}
+                  >
+                    {t}
+                  </span>
                 ))}
               </div>
-              {/* buttons */}
-              <div style={{ display:"flex", gap:12, marginTop:"1.75rem", flexWrap:"wrap" }}>
-                {p.live && (
-                  <a href={p.live} target="_blank" rel="noopener noreferrer"
-                    style={{ display:"inline-flex", alignItems:"center", gap:6, borderRadius:999, padding:"9px 18px", background:p.color, color:"#050505", textDecoration:"none", fontSize:"0.65rem", fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase", transition:"all 0.25s" }}
-                    onMouseEnter={e=>(e.currentTarget as HTMLElement).style.opacity="0.85"}
-                    onMouseLeave={e=>(e.currentTarget as HTMLElement).style.opacity="1"}
-                  >Live Site <ArrowUpRight size={13}/></a>
+
+              {/* Action buttons */}
+              <div className="mt-8 flex items-center gap-3">
+                {project.live && (
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex h-11 items-center gap-2 rounded-full px-5 text-[11px] font-bold tracking-widest uppercase transition-all duration-300 hover:scale-105"
+                    style={{ background: project.color, color: "#050505" }}
+                    aria-label={`View ${project.title} live`}
+                  >
+                    Live Site
+                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
                 )}
-                <a href={p.github} target="_blank" rel="noopener noreferrer"
-                  style={{ display:"inline-flex", alignItems:"center", gap:6, borderRadius:999, padding:"9px 18px", border:"1px solid rgba(255,255,255,0.12)", color:"rgba(255,255,255,0.5)", textDecoration:"none", fontSize:"0.65rem", fontWeight:800, letterSpacing:"0.1em", textTransform:"uppercase", transition:"all 0.25s", background:"transparent" }}
-                  onMouseEnter={e=>{const el=e.currentTarget as HTMLElement;el.style.borderColor="rgba(162,89,255,0.4)";el.style.color="#A259FF";}}
-                  onMouseLeave={e=>{const el=e.currentTarget as HTMLElement;el.style.borderColor="rgba(255,255,255,0.12)";el.style.color="rgba(255,255,255,0.5)";}}
-                >GitHub <ArrowUpRight size={13}/></a>
+                {project.github && (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex h-11 items-center gap-2 rounded-full border px-5 text-[11px] font-bold tracking-widest uppercase transition-all duration-300"
+                    style={{ borderColor: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.4)" }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLElement).style.borderColor = `${project.color}50`;
+                      (e.currentTarget as HTMLElement).style.color = project.color;
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)";
+                      (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.4)";
+                    }}
+                    aria-label={`View ${project.title} on GitHub`}
+                  >
+                    GitHub
+                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
+                )}
               </div>
             </div>
           </div>
 
-          {/* browser mock */}
-          <MockBrowser p={p} show={show} />
+          {/* Right — browser mock */}
+          <MockBrowser project={project} entering={entering} />
         </div>
 
-        {/* progress + dots */}
-        <div style={{ marginTop:"2.5rem" }}>
-          <div style={{ display:"flex", gap:6, marginBottom:10 }}>
-            {PROJECTS.map((_,i)=>(
-              <div key={i} style={{ flex:1, height:1.5, borderRadius:999, overflow:"hidden", background:"rgba(255,255,255,0.08)" }}>
-                <div style={{ height:"100%", background: i<=idx?"#A259FF":"transparent", width: i<=idx?"100%":"0%", transition:"width 0.5s ease, background 0.3s" }} />
-              </div>
-            ))}
-          </div>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-            <div style={{ display:"flex", gap:8 }} role="tablist">
-              {PROJECTS.map((pr,i)=>(
-                <button key={pr.num} role="tab" aria-selected={i===idx} aria-label={pr.title} onClick={()=>goTo(i)}
-                  style={{ height:6, borderRadius:999, border:"none", cursor:"pointer", transition:"all 0.35s ease", width: i===idx?"2rem":"0.4rem", background: i===idx?"#A259FF":"rgba(255,255,255,0.15)", padding:0 }}
+        {/* ── Bottom controls ── */}
+        <div className="mt-10 flex flex-col gap-4">
+          <ProgressBar active={active} />
+          <div className="flex items-center justify-between">
+            {/* Dot nav */}
+            <div className="flex gap-2" role="tablist">
+              {PROJECTS.map((p, i) => (
+                <button
+                  key={p.num}
+                  role="tab"
+                  aria-selected={i === active}
+                  aria-label={p.title}
+                  onClick={() => goTo(i)}
+                  className="h-1.5 rounded-full transition-all duration-400"
+                  style={{
+                    width: i === active ? "2rem" : "0.375rem",
+                    background: i === active ? "#A259FF" : "rgba(255,255,255,0.15)",
+                  }}
                 />
               ))}
             </div>
-            <span style={{ fontSize:"0.6rem", fontWeight:600, letterSpacing:"0.16em", textTransform:"uppercase", color:"rgba(255,255,255,0.2)" }}>Scroll to explore</span>
+            <span className="label text-white/20">Scroll or click to explore</span>
           </div>
         </div>
       </div>

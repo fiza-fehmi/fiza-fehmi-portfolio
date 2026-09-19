@@ -1,138 +1,263 @@
 import { useEffect, useRef, useState } from "react";
 
-const BADGES = ["React", "Node.js", "MongoDB", "Express", "TypeScript"];
+/* ── word list — accent = violet highlight ───────────────────── */
+const WORDS = [
+  { text: "I build",      accent: false },
+  { text: "digital",      accent: true  },
+  { text: "experiences.", accent: false },
+];
 
-/* tiny particle canvas */
-function Particles() {
-  const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const canvas = ref.current; if (!canvas) return;
-    const ctx = canvas.getContext("2d"); if (!ctx) return;
-    let raf: number;
-    const W = canvas.width  = canvas.offsetWidth;
-    const H = canvas.height = canvas.offsetHeight;
-    const ps = Array.from({ length: 55 }, () => ({
-      x: Math.random()*W, y: Math.random()*H,
-      r: Math.random()*1.2+0.3,
-      dx: (Math.random()-0.5)*0.2,
-      dy: -(Math.random()*0.28+0.07),
-      a: Math.random()*0.18+0.04,
-    }));
-    const tick = () => {
-      ctx.clearRect(0,0,W,H);
-      for (const p of ps) {
-        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fillStyle = `rgba(162,89,255,${p.a})`; ctx.fill();
-        p.x+=p.dx; p.y+=p.dy;
-        if (p.y<-4){p.y=H+4;p.x=Math.random()*W;}
-        if (p.x<0) p.x=W; if (p.x>W) p.x=0;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    tick();
-    return () => cancelAnimationFrame(raf);
-  }, []);
-  return <canvas ref={ref} aria-hidden="true" style={{ position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none" }} />;
+/* ── tiny animated grid background ──────────────────────────── */
+function GridBg() {
+  return (
+    <div
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      aria-hidden="true"
+      style={{ opacity: 0.025 }}
+    >
+      <svg
+        className="absolute inset-0 h-full w-full"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <pattern
+            id="hero-grid"
+            width="60"
+            height="60"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M 60 0 L 0 0 0 60"
+              fill="none"
+              stroke="white"
+              strokeWidth="0.6"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#hero-grid)" />
+      </svg>
+    </div>
+  );
 }
 
-/* typewriter — shows full name on SSR, types on client */
-function Typer({ text }: { text: string }) {
-  const [n, setN] = useState(text.length); // start full for SSR
-  const [started, setStarted] = useState(false);
-
-  useEffect(() => {
-    // reset to 0 on client and start typing
-    setN(0);
-    setStarted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!started) return;
-    if (n >= text.length) return;
-    const t = setTimeout(() => setN(c => c + 1), 65);
-    return () => clearTimeout(t);
-  }, [n, text, started]);
-
+/* ── floating violet orbs ────────────────────────────────────── */
+function Orbs() {
   return (
     <>
-      {text.slice(0, n)}
-      {started && n < text.length && (
-        <span aria-hidden="true" style={{ display:"inline-block", width:2, height:"0.85em", background:"#A259FF", marginLeft:2, verticalAlign:"text-bottom", animation:"blink 0.8s step-end infinite" }} />
-      )}
+      {/* Large primary orb — upper right */}
+      <div
+        className="hero-orb absolute"
+        style={{
+          right: "-5%",
+          top: "5%",
+          width: 700,
+          height: 700,
+          background: "radial-gradient(circle, #A259FF 0%, transparent 70%)",
+          animation: "pulseGlow 6s ease-in-out infinite",
+          opacity: 0.1,
+        }}
+      />
+      {/* Secondary orb — lower left */}
+      <div
+        className="hero-orb absolute"
+        style={{
+          left: "-8%",
+          bottom: "10%",
+          width: 400,
+          height: 400,
+          background: "radial-gradient(circle, #6C3FC5 0%, transparent 70%)",
+          animation: "pulseGlow 8s ease-in-out infinite",
+          animationDelay: "3s",
+          opacity: 0.07,
+        }}
+      />
+      {/* Tiny accent dot — centre right */}
+      <div
+        className="hero-orb absolute"
+        style={{
+          right: "25%",
+          top: "55%",
+          width: 200,
+          height: 200,
+          background: "radial-gradient(circle, #BF80FF 0%, transparent 70%)",
+          animation: "pulseGlow 5s ease-in-out infinite",
+          animationDelay: "1.5s",
+          opacity: 0.06,
+        }}
+      />
     </>
   );
 }
 
-export function Hero() {
+/* ── floating tag badges ─────────────────────────────────────── */
+const BADGES = ["React", "Node.js", "MongoDB", "Express", "TypeScript"];
+
+function FloatingBadges({ visible }: { visible: boolean }) {
   return (
-    <section id="home" style={{ position:"relative", minHeight:"100vh", display:"flex", flexDirection:"column", justifyContent:"center", overflow:"hidden", padding:"6rem 3rem 3rem" }} aria-label="Hero">
+    <div className="absolute right-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-3">
+      {BADGES.map((b, i) => (
+        <div
+          key={b}
+          className="rounded-full border border-white/8 bg-white/3 px-4 py-1.5 font-mono text-xs text-white/30 backdrop-blur-sm transition-all duration-700"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateX(0)" : "translateX(20px)",
+            transitionDelay: `${900 + i * 80}ms`,
+            animation: visible
+              ? `floatY ${4 + i * 0.4}s ease-in-out infinite`
+              : "none",
+            animationDelay: `${i * 0.5}s`,
+          }}
+        >
+          {b}
+        </div>
+      ))}
+    </div>
+  );
+}
 
-      {/* bg orbs */}
-      <div aria-hidden="true" style={{ position:"absolute", right:"-5%", top:"8%", width:600, height:600, borderRadius:"50%", background:"radial-gradient(circle,rgba(162,89,255,0.15) 0%,transparent 70%)", filter:"blur(100px)", pointerEvents:"none", animation:"driftFloat 18s ease-in-out infinite" }} />
-      <div aria-hidden="true" style={{ position:"absolute", left:"-8%", bottom:"10%", width:400, height:400, borderRadius:"50%", background:"radial-gradient(circle,rgba(108,63,197,0.1) 0%,transparent 70%)", filter:"blur(100px)", pointerEvents:"none", animation:"driftFloat 22s ease-in-out infinite 6s" }} />
+/* ── main component ──────────────────────────────────────────── */
+export function Hero() {
+  const [visible, setVisible] = useState(false);
+  const [linesDone, setLinesDone] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-      <Particles />
+  /* trigger entrance */
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 80);
+    const t2 = setTimeout(() => setLinesDone(true), 1200);
+    return () => { clearTimeout(t); clearTimeout(t2); };
+  }, []);
 
-      {/* floating badges — desktop only */}
-      <div aria-hidden="true" className="hidden lg:flex" style={{ position:"absolute", right:32, top:"50%", transform:"translateY(-50%)", flexDirection:"column", gap:12 }}>
-        {BADGES.map((b,i) => (
-          <div key={b} style={{
-            padding:"6px 16px", borderRadius:999, border:"1px solid rgba(255,255,255,0.07)",
-            background:"rgba(255,255,255,0.025)", fontFamily:"JetBrains Mono,monospace",
-            fontSize:"0.68rem", color:"rgba(255,255,255,0.3)",
-            animation: `floatY ${4+i*0.4}s ease-in-out infinite ${i*0.5}s`,
-          }}>{b}</div>
-        ))}
-      </div>
+  /* subtle particle canvas */
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-      {/* content */}
-      <div style={{ position:"relative", zIndex:1, maxWidth:1100, width:"100%" }}>
+    let raf: number;
+    const W = canvas.width  = canvas.offsetWidth;
+    const H = canvas.height = canvas.offsetHeight;
 
-        {/* availability */}
-        <div style={{ marginBottom:"2rem", animation:"fadeUp 0.6s ease 0.1s both" }}>
-          <span style={{ display:"inline-flex", alignItems:"center", gap:8, padding:"6px 16px", borderRadius:999, border:"1px solid rgba(162,89,255,0.25)", background:"rgba(162,89,255,0.07)" }}>
-            <span style={{ width:6, height:6, borderRadius:"50%", background:"#A259FF", animation:"pulseGlow 2s ease-in-out infinite", boxShadow:"0 0 8px rgba(162,89,255,0.6)" }} />
-            <span style={{ fontSize:"0.6rem", fontWeight:700, letterSpacing:"0.18em", textTransform:"uppercase", color:"#A259FF" }}>Available for Freelance</span>
-          </span>
+    const particles = Array.from({ length: 55 }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.2 + 0.3,
+      dx: (Math.random() - 0.5) * 0.25,
+      dy: -(Math.random() * 0.3 + 0.1),
+      alpha: Math.random() * 0.25 + 0.05,
+    }));
+
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, W, H);
+      for (const p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(162,89,255,${p.alpha})`;
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.y < -4) { p.y = H + 4; p.x = Math.random() * W; }
+        if (p.x < 0)  p.x = W;
+        if (p.x > W)  p.x = 0;
+      }
+      raf = requestAnimationFrame(draw);
+    }
+    draw();
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  return (
+    <section
+      id="home"
+      className="relative flex min-h-screen flex-col items-start justify-center overflow-hidden px-6 md:px-12 lg:px-20"
+      aria-label="Hero"
+    >
+      <GridBg />
+      <Orbs />
+
+      {/* Particle canvas */}
+      <canvas
+        ref={canvasRef}
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        aria-hidden="true"
+      />
+
+      {/* Floating tech badges */}
+      <FloatingBadges visible={visible} />
+
+      {/* ── Main content ── */}
+      <div className="relative z-10 max-w-5xl w-full">
+
+        {/* Top label — slides down */}
+        <div
+          className="mb-10 transition-all duration-700"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(-12px)",
+            transitionDelay: "80ms",
+          }}
+        >
+          <span className="label-accent">Full-Stack Web Developer · Pakistan</span>
         </div>
 
-        {/* greeting */}
-        <p style={{ fontSize:"clamp(1rem,2vw,1.2rem)", color:"rgba(255,255,255,0.45)", marginBottom:"0.75rem", fontFamily:"Inter,sans-serif", animation:"fadeUp 0.6s ease 0.2s both" }}>
-          Hi, I'm <strong style={{ color:"white" }}><Typer text="Fiza Fehmi" /></strong> —
-        </p>
-
-        {/* headline — each line slides up from overflow:hidden */}
-        <h1 style={{ fontFamily:"Sora,sans-serif", fontWeight:900, lineHeight:0.9, letterSpacing:"-0.02em", margin:"0 0 2.5rem" }}>
-          {[
-            { text:"I BUILD",       delay:"0.3s",  accent:false },
-            { text:"DIGITAL",       delay:"0.43s", accent:false },
-            { text:"EXPERIENCES.",  delay:"0.56s", accent:true  },
-          ].map(({ text, delay, accent }) => (
-            <div key={text} style={{ overflow:"hidden" }}>
-              <span style={{
-                display:"inline-block",
-                fontSize:"clamp(2.8rem,9vw,7.5rem)",
-                color: accent ? "#A259FF" : "white",
-                textShadow: accent ? "0 0 40px rgba(162,89,255,0.35)" : "none",
-                animation: `slideReveal 0.7s cubic-bezier(0.16,1,0.3,1) ${delay} both`,
-              }}>{text}</span>
+        {/* ── Giant headline with clip-mask reveal ── */}
+        <h1
+          className="font-display font-black leading-[0.92] tracking-tight"
+          aria-label="I build digital experiences"
+        >
+          {WORDS.map((word, i) => (
+            <div
+              key={word.text}
+              className="overflow-hidden"
+            >
+              <span
+                className={`block text-[clamp(3rem,8vw,7rem)] ${
+                  word.accent ? "text-[#A259FF] v-glow-text" : "text-white"
+                }`}
+                style={{
+                  display: "inline-block",
+                  animation: visible
+                    ? `slideReveal 0.75s cubic-bezier(0.16,1,0.3,1) forwards`
+                    : "none",
+                  animationDelay: `${180 + i * 140}ms`,
+                  opacity: visible ? undefined : 0,
+                }}
+              >
+                {word.text}
+              </span>
             </div>
           ))}
         </h1>
 
-        {/* sub text */}
-        <p style={{ maxWidth:420, fontSize:"clamp(0.875rem,1.4vw,1rem)", lineHeight:1.8, color:"rgba(255,255,255,0.4)", fontFamily:"Inter,sans-serif", animation:"fadeUp 0.8s ease 1.0s both" }}>
-          Full-stack web developer building modern, responsive websites and applications that are simple, useful and memorable.
+        {/* ── Sub-paragraph — fades in after headline ── */}
+        <p
+          className="mt-10 max-w-sm text-[15px] leading-relaxed text-white/35"
+          style={{
+            animation: linesDone
+              ? "fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards"
+              : "none",
+            opacity: linesDone ? undefined : 0,
+          }}
+        >
+          Full-stack web developer focused on building modern, responsive
+          websites and web applications that are simple, useful and memorable.
         </p>
 
-        {/* accent line */}
-        <div style={{ marginTop:"2rem", height:1, borderRadius:999, background:"linear-gradient(90deg,#A259FF,rgba(162,89,255,0.05))", animation:"drawLine 1s ease 1.3s both" }} aria-hidden="true" />
-
-        {/* scroll hint */}
-        <div style={{ marginTop:"3rem", display:"flex", alignItems:"center", gap:8, animation:"fadeIn 0.8s ease 1.8s both", opacity:0.4 }}>
-          <span style={{ fontSize:"0.6rem", fontWeight:600, letterSpacing:"0.18em", textTransform:"uppercase", color:"white", fontFamily:"Inter,sans-serif" }}>Scroll to explore</span>
-          <span style={{ color:"white", display:"inline-block", animation:"arrowBounce 2s ease-in-out infinite" }}>↓</span>
-        </div>
+        {/* ── Decorative violet line — draws in ── */}
+        <div
+          className="mt-12 h-px rounded-full"
+          style={{
+            background:
+              "linear-gradient(90deg, #A259FF 0%, rgba(162,89,255,0.1) 60%, transparent 100%)",
+            width: linesDone ? "280px" : "0px",
+            transition: "width 1s cubic-bezier(0.16,1,0.3,1)",
+            transitionDelay: "200ms",
+          }}
+          aria-hidden="true"
+        />
       </div>
     </section>
   );
