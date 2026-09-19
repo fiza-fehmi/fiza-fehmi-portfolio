@@ -85,14 +85,34 @@ function MockBrowser({
   project: (typeof PROJECTS)[number];
   entering: boolean;
 }) {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -8;
+    setTilt({ x, y });
+  };
+
   return (
     <div
-      className="relative w-full overflow-hidden rounded-2xl border border-white/8 transition-all duration-500"
+      ref={cardRef}
+      className="relative w-full overflow-hidden rounded-2xl border border-white/8"
       style={{
         background: project.bg,
         opacity: entering ? 1 : 0,
-        transform: entering ? "scale(1) translateY(0)" : "scale(0.96) translateY(16px)",
+        transform: entering
+          ? `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg) scale(1)`
+          : "scale(0.96) translateY(16px)",
+        transition: entering ? "opacity 0.5s ease, box-shadow 0.3s ease" : "all 0.5s ease",
+        boxShadow: entering ? `0 20px 60px -20px ${project.color}40` : "none",
+        willChange: "transform",
       }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => setTilt({ x: 0, y: 0 })}
       role="img"
       aria-label={`${project.title} project preview`}
     >

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X, Github, Linkedin, Mail } from "lucide-react";
 
 const NAV_LINKS = [
@@ -9,191 +9,223 @@ const NAV_LINKS = [
 ];
 
 const SOCIALS = [
-  { href: "mailto:fzafehmi@gmail.com",        icon: Mail,     label: "Email"    },
-  { href: "https://github.com/fiza-fehmi",    icon: Github,   label: "GitHub"   },
-  { href: "https://linkedin.com",             icon: Linkedin, label: "LinkedIn" },
+  { href: "mailto:fzafehmi@gmail.com",     icon: Mail,     label: "Email"    },
+  { href: "https://github.com/fiza-fehmi", icon: Github,   label: "GitHub"   },
+  { href: "https://linkedin.com",          icon: Linkedin, label: "LinkedIn" },
 ];
-
-function useScrolled(threshold = 30) {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > threshold);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [threshold]);
-  return scrolled;
-}
-
-function useActiveSection() {
-  const [active, setActive] = useState("home");
-  useEffect(() => {
-    const ids = ["home", ...NAV_LINKS.map((l) => l.id)];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        }
-      },
-      { rootMargin: "-40% 0px -55% 0px" }
-    );
-    for (const id of ids) {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    }
-    return () => observer.disconnect();
-  }, []);
-  return active;
-}
 
 function scrollTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
 export function Navbar() {
-  const scrolled = useScrolled();
-  const active = useActiveSection();
-  const [open, setOpen] = useState(false);
+  const [scrolled,    setScrolled]    = useState(false);
+  const [active,      setActive]      = useState("home");
+  const [open,        setOpen]        = useState(false);
+  const [entered,     setEntered]     = useState(false);
+  const [scrollPct,   setScrollPct]   = useState(0);
+
+  /* entrance */
+  useEffect(() => { const t = setTimeout(() => setEntered(true), 80); return () => clearTimeout(t); }, []);
+
+  /* scroll state + progress */
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+      const doc = document.documentElement;
+      const pct = (window.scrollY / (doc.scrollHeight - doc.clientHeight)) * 100;
+      setScrollPct(Math.min(100, pct));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* active section */
+  useEffect(() => {
+    const ids = ["home", ...NAV_LINKS.map(l => l.id)];
+    const obs = new IntersectionObserver(
+      entries => { for (const e of entries) if (e.isIntersecting) setActive(e.target.id); },
+      { rootMargin: "-40% 0px -55% 0px" }
+    );
+    for (const id of ids) { const el = document.getElementById(id); if (el) obs.observe(el); }
+    return () => obs.disconnect();
+  }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "border-b border-white/5 bg-[#050505]/90 backdrop-blur-xl"
-          : "bg-transparent"
-      }`}
+      style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+        transition: "all 0.5s ease",
+        background: scrolled ? "rgba(5,5,5,0.92)" : "transparent",
+        backdropFilter: scrolled ? "blur(20px)" : "none",
+        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.05)" : "1px solid transparent",
+        /* entrance */
+        opacity: entered ? 1 : 0,
+        transform: entered ? "translateY(0)" : "translateY(-100%)",
+      }}
     >
-      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 md:px-12">
+      {/* Scroll-progress bar */}
+      <div
+        style={{
+          position: "absolute", bottom: -1, left: 0, height: 1.5,
+          background: "linear-gradient(90deg, #A259FF, rgba(162,89,255,0.3))",
+          width: `${scrollPct}%`,
+          transition: "width 0.1s linear",
+          boxShadow: "0 0 8px rgba(162,89,255,0.5)",
+        }}
+        aria-hidden="true"
+      />
+
+      <nav style={{ maxWidth: 1280, margin: "0 auto", display: "flex", height: 80, alignItems: "center", justifyContent: "space-between", padding: "0 3rem" }}>
 
         {/* Logo */}
         <button
           onClick={() => scrollTo("home")}
-          className="font-display text-xl font-bold tracking-widest text-white transition-colors duration-300 hover:text-[#A259FF]"
-          aria-label="Go to home"
+          aria-label="Home"
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
         >
-          FIZA<span className="text-[#A259FF]">.</span>
+          <span style={{ fontFamily: "Sora, sans-serif", fontSize: "1.2rem", fontWeight: 900, letterSpacing: "0.12em", color: "white", transition: "color 0.3s ease" }}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#A259FF"}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "white"}
+          >
+            FIZA<span style={{ color: "#A259FF" }}>.</span>
+          </span>
         </button>
 
-        {/* Desktop nav links */}
-        <ul className="hidden items-center gap-10 md:flex">
-          {NAV_LINKS.map((link) => {
+        {/* Desktop nav */}
+        <ul style={{ display: "flex", alignItems: "center", gap: "2.5rem", listStyle: "none", margin: 0, padding: 0 }}
+          className="hidden md:flex">
+          {NAV_LINKS.map((link, i) => {
             const isActive = active === link.id;
             return (
-              <li key={link.id}>
+              <li key={link.id} style={{ opacity: entered ? 1 : 0, transform: entered ? "none" : "translateY(-8px)", transition: `opacity 0.4s ease ${200 + i * 60}ms, transform 0.4s ease ${200 + i * 60}ms` }}>
                 <button
                   onClick={() => scrollTo(link.id)}
-                  className="relative text-xs font-semibold tracking-widest uppercase transition-colors duration-300"
-                  style={{ color: isActive ? "#A259FF" : "rgba(255,255,255,0.45)" }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) (e.currentTarget as HTMLElement).style.color = "white";
+                  style={{
+                    background: "none", border: "none", cursor: "pointer", padding: "4px 0",
+                    fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase",
+                    color: isActive ? "#A259FF" : "rgba(255,255,255,0.45)",
+                    transition: "color 0.2s ease", position: "relative",
                   }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.45)";
-                  }}
+                  onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.color = "white"; }}
+                  onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.45)"; }}
                 >
                   {link.label}
-                  {isActive && (
-                    <span
-                      className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-[#A259FF]"
-                      aria-hidden="true"
-                    />
-                  )}
+                  {/* Active indicator dot */}
+                  <span style={{
+                    position: "absolute", bottom: -4, left: "50%", transform: "translateX(-50%)",
+                    width: isActive ? 4 : 0, height: isActive ? 4 : 0,
+                    borderRadius: "50%", background: "#A259FF",
+                    transition: "all 0.3s cubic-bezier(0.34,1.56,0.64,1)",
+                    boxShadow: isActive ? "0 0 6px rgba(162,89,255,0.6)" : "none",
+                    display: "block",
+                  }} aria-hidden="true" />
                 </button>
               </li>
             );
           })}
         </ul>
 
-        {/* Right — socials + CTA */}
-        <div className="hidden items-center gap-2 md:flex">
-          {/* Social icons */}
+        {/* Socials + CTA */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", opacity: entered ? 1 : 0, transform: entered ? "none" : "translateY(-8px)", transition: "opacity 0.5s ease 600ms, transform 0.5s ease 600ms" }}
+          className="hidden md:flex">
           {SOCIALS.map(({ href, icon: Icon, label }) => (
-            <a
-              key={label}
-              href={href}
+            <a key={label} href={href}
               target={href.startsWith("http") ? "_blank" : undefined}
               rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
               aria-label={label}
-              className="flex h-8 w-8 items-center justify-center rounded-full border transition-all duration-200"
-              style={{ borderColor: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.3)" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(162,89,255,0.4)";
-                (e.currentTarget as HTMLElement).style.color = "#A259FF";
+              style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.3)", transition: "all 0.2s ease", textDecoration: "none" }}
+              onMouseEnter={e => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.borderColor = "rgba(162,89,255,0.45)";
+                el.style.color = "#A259FF";
+                el.style.transform = "scale(1.12)";
+                el.style.boxShadow = "0 0 12px rgba(162,89,255,0.3)";
               }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)";
-                (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.3)";
+              onMouseLeave={e => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.borderColor = "rgba(255,255,255,0.08)";
+                el.style.color = "rgba(255,255,255,0.3)";
+                el.style.transform = "scale(1)";
+                el.style.boxShadow = "none";
               }}
             >
-              <Icon className="h-3.5 w-3.5" />
+              <Icon size={14} />
             </a>
           ))}
 
-          {/* Thin divider */}
-          <div className="mx-2 h-4 w-px" style={{ background: "rgba(255,255,255,0.08)" }} />
+          <div style={{ width: 1, height: 16, background: "rgba(255,255,255,0.08)", margin: "0 8px" }} />
 
-          {/* Let's Talk CTA */}
           <button
             onClick={() => scrollTo("contact")}
-            className="group flex items-center gap-1.5 rounded-full border px-5 py-2 text-[11px] font-semibold tracking-[0.14em] uppercase transition-all duration-300"
-            style={{ borderColor: "rgba(162,89,255,0.35)", color: "#A259FF" }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "#A259FF";
-              (e.currentTarget as HTMLElement).style.color = "#050505";
-              (e.currentTarget as HTMLElement).style.borderColor = "#A259FF";
+            style={{ background: "transparent", border: "1px solid rgba(162,89,255,0.35)", borderRadius: 999, padding: "8px 20px", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#A259FF", cursor: "pointer", transition: "all 0.25s ease", display: "flex", alignItems: "center", gap: 6 }}
+            onMouseEnter={e => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.background = "#A259FF";
+              el.style.color = "#050505";
+              el.style.borderColor = "#A259FF";
+              el.style.boxShadow = "0 0 20px rgba(162,89,255,0.4)";
             }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "transparent";
-              (e.currentTarget as HTMLElement).style.color = "#A259FF";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(162,89,255,0.35)";
+            onMouseLeave={e => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.background = "transparent";
+              el.style.color = "#A259FF";
+              el.style.borderColor = "rgba(162,89,255,0.35)";
+              el.style.boxShadow = "none";
             }}
           >
-            Let's Talk
-            <span className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+            Let's Talk <span style={{ display: "inline-block", transition: "transform 0.2s ease" }}
+              onMouseEnter={e => (e.currentTarget as HTMLElement).style.transform = "translate(2px,-2px)"}
+              onMouseLeave={e => (e.currentTarget as HTMLElement).style.transform = "none"}
+            >↗</span>
           </button>
         </div>
 
         {/* Mobile toggle */}
         <button
-          className="flex h-9 w-9 items-center justify-center text-white/60 md:hidden"
-          onClick={() => setOpen((v) => !v)}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.6)" }}
+          onClick={() => setOpen(v => !v)}
           aria-label="Toggle menu"
+          className="md:hidden"
         >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </nav>
 
       {/* Mobile drawer */}
-      <div
-        className={`overflow-hidden border-b border-white/5 bg-[#050505]/95 backdrop-blur-xl transition-all duration-300 md:hidden ${
-          open ? "max-h-80" : "max-h-0"
-        }`}
+      <div style={{
+        overflow: "hidden", maxHeight: open ? "320px" : 0,
+        background: "rgba(5,5,5,0.97)", backdropFilter: "blur(20px)",
+        borderBottom: open ? "1px solid rgba(255,255,255,0.05)" : "none",
+        transition: "max-height 0.35s cubic-bezier(0.16,1,0.3,1)",
+      }}
+        className="md:hidden"
       >
-        <ul className="flex flex-col gap-1 px-6 py-5">
-          {NAV_LINKS.map((link) => (
-            <li key={link.id}>
+        <ul style={{ listStyle: "none", margin: 0, padding: "1rem 2rem" }}>
+          {NAV_LINKS.map((link, i) => (
+            <li key={link.id} style={{
+              opacity: open ? 1 : 0,
+              transform: open ? "translateX(0)" : "translateX(-16px)",
+              transition: `opacity 0.3s ease ${i * 60}ms, transform 0.3s ease ${i * 60}ms`,
+            }}>
               <button
                 onClick={() => { scrollTo(link.id); setOpen(false); }}
-                className="w-full py-3 text-left text-xs font-semibold tracking-widest uppercase transition-colors duration-200"
-                style={{ color: active === link.id ? "#A259FF" : "rgba(255,255,255,0.4)" }}
+                style={{ width: "100%", textAlign: "left", background: "none", border: "none", cursor: "pointer", padding: "12px 0", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: active === link.id ? "#A259FF" : "rgba(255,255,255,0.4)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}
               >
                 {link.label}
               </button>
             </li>
           ))}
         </ul>
-        {/* Mobile socials */}
-        <div className="flex items-center gap-3 px-6 pb-5">
+        <div style={{ display: "flex", gap: 10, padding: "0 2rem 1.5rem" }}>
           {SOCIALS.map(({ href, icon: Icon, label }) => (
-            <a
-              key={label}
-              href={href}
+            <a key={label} href={href}
               target={href.startsWith("http") ? "_blank" : undefined}
               rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
               aria-label={label}
-              className="flex h-8 w-8 items-center justify-center rounded-full border"
-              style={{ borderColor: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.3)" }}
+              style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.3)", textDecoration: "none" }}
             >
-              <Icon className="h-3.5 w-3.5" />
+              <Icon size={14} />
             </a>
           ))}
         </div>

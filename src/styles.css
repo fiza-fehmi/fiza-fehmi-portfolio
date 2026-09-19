@@ -219,3 +219,70 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ─── Extra keyframes ──────────────────────────────────────────── */
+@keyframes travelDot {
+  0%   { top: 0%; opacity: 1; }
+  80%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+@keyframes borderPulse {
+  0%, 100% { border-color: rgba(162,89,255,0.10); }
+  50%       { border-color: rgba(162,89,255,0.35); }
+}
+
+@keyframes scalePop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); }
+  70%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes successCheck {
+  0%   { stroke-dashoffset: 60; opacity: 0; }
+  40%  { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+@keyframes glowPulseAccent {
+  0%, 100% { box-shadow: 0 0 12px -2px rgba(162,89,255,0.3); }
+  50%       { box-shadow: 0 0 28px -4px rgba(162,89,255,0.6); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes rotateY180 {
+  from { transform: perspective(400px) rotateY(0deg); }
+  to   { transform: perspective(400px) rotateY(180deg); }
+}
+
+@keyframes driftFloat {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  33%  { transform: translate(20px, -15px) scale(1.02); }
+  66%  { transform: translate(-10px, 10px) scale(0.98); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes textGradientShift {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes underlineGrow {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+@keyframes countUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
