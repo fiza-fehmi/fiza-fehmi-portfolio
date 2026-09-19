@@ -35,18 +35,28 @@ function Particles() {
   return <canvas ref={ref} aria-hidden="true" style={{ position:"absolute", inset:0, width:"100%", height:"100%", pointerEvents:"none" }} />;
 }
 
-/* typewriter */
+/* typewriter — shows full name on SSR, types on client */
 function Typer({ text }: { text: string }) {
-  const [n, setN] = useState(0);
+  const [n, setN] = useState(text.length); // start full for SSR
+  const [started, setStarted] = useState(false);
+
   useEffect(() => {
+    // reset to 0 on client and start typing
+    setN(0);
+    setStarted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!started) return;
     if (n >= text.length) return;
-    const t = setTimeout(() => setN(c => c+1), 65);
+    const t = setTimeout(() => setN(c => c + 1), 65);
     return () => clearTimeout(t);
-  }, [n, text]);
+  }, [n, text, started]);
+
   return (
     <>
-      {text.slice(0,n)}
-      {n < text.length && (
+      {text.slice(0, n)}
+      {started && n < text.length && (
         <span aria-hidden="true" style={{ display:"inline-block", width:2, height:"0.85em", background:"#A259FF", marginLeft:2, verticalAlign:"text-bottom", animation:"blink 0.8s step-end infinite" }} />
       )}
     </>
