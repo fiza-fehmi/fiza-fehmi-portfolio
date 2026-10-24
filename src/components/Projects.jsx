@@ -12,6 +12,16 @@ const Projects = () => {
 
   const projects = [
     {
+      title: 'Vespera Enterprise',
+      description: 'A modern full-stack e-commerce and B2B portal featuring advanced product filtering, slide-over cart, 4-step Stripe checkout, and instant PDF invoice downloads.',
+      image: '/projects/vespera-enterprise.png',
+      tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Stripe', 'PostgreSQL'],
+      liveLink: 'https://vespera-liart.vercel.app',
+      githubLink: 'https://github.com/fiza-fehmi/vespera.git',
+      githubLabel: 'Backend Repo',
+      gradient: 'from-amber-500 to-yellow-500',
+    },
+    {
       title: 'BROS GROUP LLC-official portal',
       description: 'A modern corporate portal for Bros Group LLC featuring consultation booking, startup pitch submissions, and a careers portal built with Next.js and TypeScript.',
       image: '/projects/bros-group-llc.png',
@@ -262,7 +272,7 @@ const Projects = () => {
                               className="flex-1 px-6 py-3 glass rounded-xl font-medium flex items-center justify-center gap-2 hover:border-primary/50 transition-all"
                             >
                               <GitHubIcon className="w-[18px] h-[18px]" />
-                              GitHub
+                              {projects[currentIndex].githubLabel || 'GitHub'}
                             </motion.a>
                           </>
                         ) : projects[currentIndex].githubLinks ? (
