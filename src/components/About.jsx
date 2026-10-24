@@ -9,7 +9,7 @@ const About = () => {
   const [isHovering, setIsHovering] = useState(false);
 
   const stats = [
-    { icon: Code2, label: 'Projects Completed', value: '15+', gradient: 'from-violet-500 to-purple-500' },
+    { icon: Code2, label: 'Projects Completed', value: '10+', gradient: 'from-violet-500 to-purple-500' },
     { icon: Zap, label: 'Technologies', value: '10+', gradient: 'from-purple-500 to-pink-500' },
     { icon: Database, label: 'Full-Stack', value: 'MERN', gradient: 'from-pink-500 to-violet-500' },
     { icon: Globe, label: 'Web Development', value: 'Modern', gradient: 'from-violet-600 to-purple-600' },

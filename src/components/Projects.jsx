@@ -12,6 +12,15 @@ const Projects = () => {
 
   const projects = [
     {
+      title: 'BROS GROUP LLC-official portal',
+      description: 'A modern corporate portal for Bros Group LLC featuring consultation booking, startup pitch submissions, and a careers portal built with Next.js and TypeScript.',
+      image: '/projects/bros-group-llc.png',
+      tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'React'],
+      liveLink: 'https://bros-group-llc-8l4u-alpha.vercel.app/',
+      githubLink: 'https://github.com/fiza-fehmi/Bros-group-LLC.git',
+      gradient: 'from-amber-500 to-orange-600',
+    },
+    {
       title: 'Postage',
       description: 'A full-stack social media platform inspired by Instagram. Features include user authentication, create and share posts, image uploads with ImageKit CDN, follow/unfollow users, like and comment on posts, personalized feed, user profiles, and real-time updates. Built with MERN stack.',
       image: '/projects/postage.png',
